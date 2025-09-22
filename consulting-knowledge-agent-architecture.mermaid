@@ -1,0 +1,219 @@
+graph TB
+    subgraph "Client Layer - Consulting Teams"
+        React[ReactJS Dashboard]
+        Teams[Team Workspaces<br/>Project Rooms]
+        Analytics[Analytics Dashboard<br/>Usage & Insights]
+        DocGen[Document Generator UI<br/>Reports, Decks]
+        React --> Teams
+        React --> Analytics
+        React --> DocGen
+    end
+
+    subgraph "API Gateway & Authentication"
+        FastAPI[FastAPI Gateway<br/>Load Balancer]
+        Auth[Enterprise SSO<br/>SAML/OAuth2]
+        RBAC[Role-Based Access<br/>Project/Client Isolation]
+        Audit[Audit Logger<br/>Compliance Tracking]
+        FastAPI --> Auth
+        FastAPI --> RBAC
+        FastAPI --> Audit
+    end
+
+    subgraph "Agent Orchestration Layer - LangGraph"
+        LangGraph[LangGraph Controller<br/>Workflow Engine]
+        ResearchAgent[Research Agent<br/>Market Analysis]
+        AnalysisAgent[Analysis Agent<br/>Data Processing]
+        SynthesisAgent[Synthesis Agent<br/>Insight Generation]
+        QAAgent[QA Agent<br/>Fact Checking]
+        ReviewAgent[Review Agent<br/>Quality Control]
+        
+        LangGraph --> ResearchAgent
+        LangGraph --> AnalysisAgent
+        LangGraph --> SynthesisAgent
+        LangGraph --> QAAgent
+        LangGraph --> ReviewAgent
+    end
+
+    subgraph "Multi-Modal Processing Pipeline"
+        DocProcessor[Document Processor<br/>PDF, DOCX, PPTX]
+        TableExtractor[Table Extractor<br/>Structured Data]
+        ChartAnalyzer[Chart Analyzer<br/>Visual Insights]
+        ImageProcessor[Image Processor<br/>OCR, Vision Models]
+        AudioProcessor[Audio Processor<br/>Meeting Transcripts]
+        
+        DocProcessor --> TableExtractor
+        DocProcessor --> ChartAnalyzer
+        DocProcessor --> ImageProcessor
+        DocProcessor --> AudioProcessor
+    end
+
+    subgraph "Semantic Search & Tagging"
+        QueryUnderstand[Query Understanding<br/>Intent Classification]
+        SemanticTagger[Semantic Tagger<br/>Auto-categorization]
+        EntityExtractor[Entity Extractor<br/>Companies, People, Topics]
+        TaxonomyEngine[Taxonomy Engine<br/>Industry Classifications]
+        CrossRefEngine[Cross-Reference Engine<br/>Related Documents]
+        
+        QueryUnderstand --> SemanticTagger
+        SemanticTagger --> EntityExtractor
+        EntityExtractor --> TaxonomyEngine
+        TaxonomyEngine --> CrossRefEngine
+    end
+
+    subgraph "Vector Store Architecture"
+        EmbedRouter[Embedding Router<br/>Model Selection]
+        TextEmbeddings[Text Embeddings<br/>Dense Vectors]
+        ImageEmbeddings[Image Embeddings<br/>CLIP/Vision]
+        HybridIndex[Hybrid Index<br/>Dense + Sparse]
+        
+        Pinecone[(Pinecone<br/>Primary Vector DB)]
+        Qdrant[(Qdrant<br/>Backup/Overflow)]
+        ElasticSearch[(ElasticSearch<br/>Keyword Search)]
+        
+        EmbedRouter --> TextEmbeddings
+        EmbedRouter --> ImageEmbeddings
+        TextEmbeddings --> HybridIndex
+        ImageEmbeddings --> HybridIndex
+        HybridIndex --> Pinecone
+        HybridIndex --> Qdrant
+        HybridIndex --> ElasticSearch
+    end
+
+    subgraph "LangChain Integration Layer"
+        LangChain[LangChain Core]
+        ChainRouter[Chain Router<br/>Task Selection]
+        MemoryManager[Memory Manager<br/>Context Window]
+        ToolBox[Tool Box<br/>APIs, Calculators]
+        PromptManager[Prompt Manager<br/>Template Store]
+        
+        LangChain --> ChainRouter
+        LangChain --> MemoryManager
+        LangChain --> ToolBox
+        LangChain --> PromptManager
+    end
+
+    subgraph "Document Generation System"
+        TemplateEngine[Template Engine<br/>Firm Standards]
+        ReportGen[Report Generator<br/>Long-form Docs]
+        SlideGen[Slide Generator<br/>Presentations]
+        ExcelGen[Excel Generator<br/>Models, Analysis]
+        Formatter[Format Controller<br/>Brand Guidelines]
+        
+        TemplateEngine --> ReportGen
+        TemplateEngine --> SlideGen
+        TemplateEngine --> ExcelGen
+        ReportGen --> Formatter
+        SlideGen --> Formatter
+        ExcelGen --> Formatter
+    end
+
+    subgraph "Testing & Optimization Framework"
+        ABTestEngine[A/B Test Engine<br/>Prompt Variants]
+        EmbedEvaluator[Embedding Evaluator<br/>Quality Metrics]
+        RetrievalScorer[Retrieval Scorer<br/>Relevance Testing]
+        LatencyMonitor[Latency Monitor<br/>Performance Tracking]
+        DriftDetector[Drift Detector<br/>Model Degradation]
+        
+        ABTestEngine --> EmbedEvaluator
+        EmbedEvaluator --> RetrievalScorer
+        RetrievalScorer --> LatencyMonitor
+        LatencyMonitor --> DriftDetector
+    end
+
+    subgraph "Quality Assurance Pipeline"
+        FactChecker[Fact Checker<br/>Source Verification]
+        ConsistencyCheck[Consistency Checker<br/>Cross-doc Validation]
+        ComplianceCheck[Compliance Checker<br/>Regulatory Rules]
+        PIIRedactor[PII Redactor<br/>Data Protection]
+        
+        FactChecker --> ConsistencyCheck
+        ConsistencyCheck --> ComplianceCheck
+        ComplianceCheck --> PIIRedactor
+    end
+
+    subgraph "Model Registry & MCP"
+        MCPHub[MCP Hub<br/>Model Registry]
+        LLMPool[LLM Pool<br/>GPT-4, Claude, Gemini]
+        SpecializedModels[Specialized Models<br/>Finance, Legal, Industry]
+        FallbackStrategy[Fallback Strategy<br/>Redundancy]
+        
+        MCPHub --> LLMPool
+        MCPHub --> SpecializedModels
+        LLMPool --> FallbackStrategy
+    end
+
+    subgraph "Caching & Performance"
+        RedisCache[(Redis<br/>Query Cache)]
+        EmbedCache[(Embedding Cache<br/>Pre-computed)]
+        DocCache[(Document Cache<br/>Processed Docs)]
+        CDN[CDN<br/>Static Assets]
+        
+        RedisCache --> EmbedCache
+        EmbedCache --> DocCache
+        DocCache --> CDN
+    end
+
+    subgraph "Data Sources & Connectors"
+        SharePoint[SharePoint<br/>Internal Docs]
+        S3Storage[S3 Storage<br/>Client Data]
+        APIConnectors[API Connectors<br/>Bloomberg, Reuters]
+        EmailConnector[Email Connector<br/>Outlook Integration]
+        
+        SharePoint --> DocProcessor
+        S3Storage --> DocProcessor
+        APIConnectors --> DocProcessor
+        EmailConnector --> DocProcessor
+    end
+
+    subgraph "Monitoring & Analytics"
+        Grafana[Grafana<br/>Metrics Dashboard]
+        Prometheus[Prometheus<br/>Time Series]
+        OpenTelemetry[OpenTelemetry<br/>Distributed Tracing]
+        UsageAnalytics[Usage Analytics<br/>User Behavior]
+        
+        Grafana --> Prometheus
+        Prometheus --> OpenTelemetry
+        OpenTelemetry --> UsageAnalytics
+    end
+
+    %% Main Flow Connections
+    Teams --> FastAPI
+    FastAPI --> LangGraph
+    LangGraph --> LangChain
+    
+    %% Processing Flow
+    LangChain --> QueryUnderstand
+    CrossRefEngine --> EmbedRouter
+    
+    %% Vector Flow
+    Pinecone --> ChainRouter
+    ElasticSearch --> ChainRouter
+    
+    %% Generation Flow
+    SynthesisAgent --> TemplateEngine
+    Formatter --> DocGen
+    
+    %% Quality Flow
+    QAAgent --> FactChecker
+    PIIRedactor --> ReviewAgent
+    
+    %% Testing Flow
+    ABTestEngine --> PromptManager
+    DriftDetector --> MCPHub
+    
+    %% Cache Flow
+    FastAPI --> RedisCache
+    RedisCache --> FastAPI
+    
+    %% Monitoring Connections
+    LangGraph --> OpenTelemetry
+    LangChain --> OpenTelemetry
+    FastAPI --> OpenTelemetry
+    
+    style React fill:#61dafb
+    style FastAPI fill:#009688
+    style LangGraph fill:#4ecdc4
+    style LangChain fill:#ff6b6b
+    style Pinecone fill:#95e77e
+    style MCPHub fill:#ffd93d
+    style Grafana fill:#ff9ff3

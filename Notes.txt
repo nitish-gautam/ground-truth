@@ -1,0 +1,33 @@
+  Complete Agent Team Now Available:
+
+  🎯 @master-orchestrator (NEW!)
+
+  The Chief Technical Architect - Coordinates complex multi-agent workflows, delegates tasks to specialized agents, ensures architectural consistency across all components. Perfect for big picture planning and complex feature development.
+
+  🔧 Technical Specialists:
+
+  - @backend-fastapi-expert - FastAPI & async development
+  - @database-designer - PostgreSQL & data modeling
+  - @frontend-react-expert - React & TypeScript PWA development
+  - @devops-engineer - AWS infrastructure & deployment
+
+  🛡️ Quality & Security:
+
+  - @security-architect - PAS 128 compliance & GDPR
+  - @code-reviewer - Code quality & architecture review
+  - @qa-automation-expert - Testing strategies & automation
+  - @design-reviewer - UI/UX & accessibility compliance
+
+  Master Orchestrator Use Cases:
+
+  The @master-orchestrator is particularly powerful for your Underground Utility Detection Platform because it can:
+
+  1. Coordinate Complex Features:
+  "@master-orchestrator Plan the complete RAG pipeline implementation with GPR processing, database design, and frontend integration"
+  2. Manage Multi-Agent Workflows:
+  "@master-orchestrator Delegate the PAS 128 compliance report generation feature across backend, frontend, and security teams"
+  3. Architecture Decisions:
+  "@master-orchestrator Design the microservices architecture for processing 10,000+ GPR files with real-time risk assessment"
+
+  The orchestrator will automatically delegate to appropriate specialists while maintaining overall system coherence. This is perfect for a complex AI platform like yours that needs coordination between ML pipelines, compliance systems, and user
+  interfaces.
