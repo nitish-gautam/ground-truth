@@ -1,0 +1,155 @@
+{
+  "parallel_execution": true,
+  "max_workers": 4,
+  "continue_on_failure": true,
+  "generate_reports": true,
+  "output_directory": "./test_results",
+  "log_level": "INFO",
+  "test_timeout_minutes": 30,
+  "health_check_timeout_seconds": 60,
+  "suite_selection": "all",
+  "performance_baseline_file": null,
+  "environment": "test",
+
+  "performance_baselines": {
+    "api_response_time_ms": 500,
+    "database_query_time_ms": 100,
+    "throughput_requests_per_second": 100,
+    "memory_usage_mb": 512,
+    "cpu_utilization_percent": 80,
+    "concurrent_requests": 50
+  },
+
+  "load_test_configurations": {
+    "light_load": {
+      "concurrent_users": 10,
+      "duration_seconds": 30,
+      "requests_per_user": 10
+    },
+    "normal_load": {
+      "concurrent_users": 25,
+      "duration_seconds": 60,
+      "requests_per_user": 20
+    },
+    "peak_load": {
+      "concurrent_users": 50,
+      "duration_seconds": 120,
+      "requests_per_user": 30
+    },
+    "stress_load": {
+      "concurrent_users": 100,
+      "duration_seconds": 180,
+      "requests_per_user": 50
+    }
+  },
+
+  "dataset_paths": {
+    "twente_gpr_path": "./datasets/twente",
+    "mojahid_images_path": "./datasets/mojahid",
+    "pas128_docs_path": "./datasets/pas128",
+    "usag_reports_path": "./datasets/usag"
+  },
+
+  "api_test_config": {
+    "base_url": "http://localhost:8000",
+    "timeout_seconds": 30,
+    "retry_attempts": 3,
+    "concurrent_request_levels": [1, 5, 10, 25, 50],
+    "endpoints_to_test": [
+      "/health",
+      "/",
+      "/api/v1/datasets/info",
+      "/api/v1/datasets/twente/status",
+      "/api/v1/datasets/mojahid/status",
+      "/api/v1/gpr/surveys",
+      "/api/v1/environmental/conditions",
+      "/api/v1/processing/filters",
+      "/api/v1/validation/metrics",
+      "/api/v1/analytics/dashboard",
+      "/api/v1/material-classification/models",
+      "/api/v1/compliance/quality-levels"
+    ]
+  },
+
+  "database_test_config": {
+    "connection_pool_size": 10,
+    "query_timeout_seconds": 30,
+    "test_data_size": 1000,
+    "concurrent_operations": [5, 10, 20],
+    "schemas_to_validate": [
+      "gpr_data",
+      "environmental",
+      "validation",
+      "utilities",
+      "ml_analytics"
+    ]
+  },
+
+  "ml_model_test_config": {
+    "synthetic_data_size": 1000,
+    "cross_validation_folds": 5,
+    "performance_thresholds": {
+      "material_classification": {
+        "accuracy": 0.75,
+        "precision": 0.70,
+        "recall": 0.70,
+        "f1": 0.70
+      },
+      "utility_detection": {
+        "accuracy": 0.80,
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75
+      },
+      "depth_prediction": {
+        "r2": 0.60,
+        "mae": 0.5,
+        "rmse": 0.8
+      },
+      "environmental_correlation": {
+        "r2": 0.40,
+        "correlation": 0.60
+      }
+    }
+  },
+
+  "data_pipeline_test_config": {
+    "batch_sizes": [1, 5, 10, 25],
+    "image_sizes_to_test": [[128, 128], [256, 256], [512, 512]],
+    "signal_sizes_to_test": [1000, 5000, 10000, 25000],
+    "processing_iterations": 5,
+    "max_file_size_mb": 100
+  },
+
+  "quality_gates": {
+    "overall_success_threshold": 0.8,
+    "api_success_threshold": 0.9,
+    "database_success_threshold": 0.95,
+    "performance_score_threshold": 70,
+    "ml_accuracy_threshold": 0.75,
+    "critical_suites": ["api_tests", "database_validation"]
+  },
+
+  "reporting": {
+    "generate_individual_reports": true,
+    "generate_master_report": true,
+    "report_formats": ["json"],
+    "include_performance_charts": false,
+    "include_detailed_logs": true,
+    "compress_large_reports": true
+  },
+
+  "notifications": {
+    "email_on_completion": false,
+    "slack_webhook": null,
+    "teams_webhook": null,
+    "console_summary": true
+  },
+
+  "cleanup": {
+    "cleanup_temp_files": true,
+    "retain_logs_days": 7,
+    "retain_reports_days": 30,
+    "cleanup_test_data": true
+  }
+}
