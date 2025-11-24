@@ -451,3 +451,243 @@ The agents are configured to understand the project's specific requirements:
 ### Customization
 Edit `.claude/design-principles.md` to customize review criteria for this project.
 
+---
+
+## Slash Commands - Multi-Agent Development System
+
+This project includes a comprehensive slash command system for specialized AI agents. Type `/` in Claude Code to see all available commands.
+
+### Available Slash Commands
+
+#### `/orchestrate` - Master Orchestrator
+**Agent**: master-orchestrator
+**Use Cases:**
+- Architectural planning and system design
+- Multi-agent workflow coordination
+- Technical requirement analysis
+- Integration strategy planning
+- Quality gate definitions
+
+**Example Usage:**
+```
+/orchestrate Design the BIM integration architecture
+/orchestrate --review Review current GPR processing pipeline
+/orchestrate Plan Phase 2 development milestones
+```
+
+#### `/fastapi` - FastAPI Backend Expert
+**Agent**: backend-fastapi-expert
+**Use Cases:**
+- Async API endpoint design
+- Database integration patterns
+- Performance optimization
+- Authentication & authorization
+- WebSocket implementation
+
+**Example Usage:**
+```
+/fastapi Implement real-time GPR processing endpoint
+/fastapi Optimize database connection pooling
+/fastapi Add JWT authentication to all endpoints
+```
+
+#### `/database` - PostgreSQL Database Designer
+**Agent**: database-designer
+**Use Cases:**
+- Schema design and optimization
+- Migration strategies
+- Query performance tuning
+- Index optimization
+- Spatial data (PostGIS) design
+
+**Example Usage:**
+```
+/database Design schema for LiDAR point cloud metadata
+/database Optimize gpr_surveys table for 100K+ records
+/database Create indexes for spatial queries
+```
+
+#### `/frontend` - React/TypeScript Expert
+**Agent**: frontend-react-expert
+**Use Cases:**
+- React component architecture
+- TypeScript integration
+- State management (Redux, Zustand)
+- Performance optimization
+- PWA implementation
+
+**Example Usage:**
+```
+/frontend Create 3D BIM viewer component
+/frontend Implement real-time GPR data streaming
+/frontend Optimize map rendering performance
+```
+
+#### `/devops` - DevOps & Infrastructure Expert
+**Agent**: devops-engineer
+**Use Cases:**
+- Docker/Docker Compose setup
+- CI/CD pipeline configuration
+- AWS infrastructure deployment
+- Monitoring & logging setup
+- Performance benchmarking
+
+**Example Usage:**
+```
+/devops Create docker-compose.yml for local development
+/devops Set up GitHub Actions CI/CD pipeline
+/devops Design AWS ECS deployment architecture
+```
+
+#### `/security` - Security & Compliance Expert
+**Agent**: security-architect
+**Use Cases:**
+- Security vulnerability assessment
+- GDPR/PAS 128 compliance review
+- Authentication & authorization design
+- Data encryption strategies
+- Audit logging implementation
+
+**Example Usage:**
+```
+/security Review user authentication implementation
+/security Ensure GDPR compliance for utility data storage
+/security Implement row-level security for multi-tenant data
+```
+
+#### `/qa` - QA & Testing Expert
+**Agent**: qa-automation-expert
+**Use Cases:**
+- Test strategy design
+- Unit/integration test implementation
+- Performance testing
+- Test automation
+- Coverage analysis
+
+**Example Usage:**
+```
+/qa Create comprehensive test suite for GPR processing
+/qa Design performance benchmarks for API endpoints
+/qa Implement E2E tests for BIM validation workflow
+```
+
+#### `/review` - Code Quality Reviewer
+**Agent**: code-reviewer
+**Use Cases:**
+- Code quality analysis
+- Best practices validation
+- Refactoring suggestions
+- Performance review
+- Security code review
+
+**Example Usage:**
+```
+/review Analyze signal_processing.py for improvements
+/review Check compliance with Python best practices
+/review Suggest refactoring for better maintainability
+```
+
+#### `/design-review` - UI/UX Design Reviewer
+**Agent**: design-reviewer
+**Use Cases:**
+- Visual hierarchy analysis
+- Accessibility compliance (WCAG AA+)
+- Responsive design validation
+- Component consistency review
+- Performance impact assessment
+
+**Example Usage:**
+```
+/design-review Review map interface accessibility
+/design-review Validate responsive layout for mobile devices
+/design-review Assess 3D viewer performance impact
+```
+
+#### `/django` - Django REST Expert
+**Agent**: backend-django-expert
+**Use Cases:**
+- Django REST Framework design
+- ORM optimization
+- Admin interface customization
+- DRF serializer patterns
+- Django authentication
+
+**Example Usage:**
+```
+/django Design RESTful API for utility management
+/django Optimize queryset performance for large datasets
+/django Implement custom Django admin for GPR data
+```
+
+### Slash Command Configuration
+
+All slash commands are configured in:
+- **Command Definitions**: `.claude/commands.json`
+- **Command Documentation**: `.claude/commands/*.md`
+- **Agent Configurations**: `.claude/agents/*.md`
+
+### Multi-Agent Workflow Example
+
+```bash
+# Step 1: Plan architecture
+/orchestrate Design integration of BIM validation with existing GPR platform
+
+# Step 2: Design database schema
+/database Create schema for bim_models and lidar_scans tables
+
+# Step 3: Implement backend API
+/fastapi Create endpoints for BIM file upload and processing
+
+# Step 4: Build frontend components
+/frontend Develop 3D BIM viewer with IFC.js integration
+
+# Step 5: Set up infrastructure
+/devops Configure Docker Compose for local BIM processing stack
+
+# Step 6: Security review
+/security Review BIM file upload security and access controls
+
+# Step 7: Testing
+/qa Create integration tests for BIM processing pipeline
+
+# Step 8: Code review
+/review Analyze all new code for quality and best practices
+```
+
+### Agent Prompt Customization
+
+To customize agent behavior for this project, edit the agent configuration files:
+
+```bash
+.claude/agents/
+├── master-orchestrator.md          # Orchestration logic
+├── backend-fastapi-expert.md       # FastAPI patterns
+├── database-designer.md            # Database design principles
+├── frontend-react-expert.md        # React component guidelines
+├── devops-engineer.md              # Infrastructure standards
+├── security-architect.md           # Security requirements
+├── qa-automation-expert.md         # Testing strategies
+├── code-reviewer.md                # Code quality criteria
+├── design-reviewer.md              # UI/UX guidelines
+└── backend-django-expert.md        # Django patterns
+```
+
+### Benefits of Multi-Agent System
+
+1. **Specialized Expertise**: Each agent focuses on specific domain knowledge
+2. **Consistency**: Agents follow project-specific patterns and conventions
+3. **Quality Gates**: Automated reviews at each development stage
+4. **Parallel Development**: Different agents can work on different components
+5. **Documentation**: All decisions documented in agent conversations
+6. **Learning**: Agent configurations evolve with project patterns
+
+### Quick Start Guide
+
+1. **Type `/` in Claude Code** to see all available commands
+2. **Choose the relevant agent** for your current task
+3. **Provide context** about what you need help with
+4. **Review and iterate** on agent suggestions
+5. **Switch agents** as needed for different aspects of implementation
+
+---
+

@@ -194,5 +194,8 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 # Claude Code configuration
-.claude/project-config.json
-.claude/review-context.md
+.claude/
+.claude/agents/
+
+# macOS
+.DS_Store
