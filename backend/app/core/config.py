@@ -2,23 +2,23 @@
 Application configuration management
 =====================================
 
-Centralized configuration for the Underground Utility Detection Platform.
+Centralized configuration for the Infrastructure Intelligence Platform.
 Handles environment variables, database settings, and application parameters.
 """
 
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from pydantic import Field, PostgresDsn, field_validator
-from pydantic_settings import BaseSettings
+from pydantic import Field, PostgresDsn, field_validator, model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Application settings with validation and type hints."""
 
     # Application settings
-    APP_NAME: str = "Underground Utility Detection Platform"
+    APP_NAME: str = "Infrastructure Intelligence Platform"
     VERSION: str = "1.0.0"
     DEBUG: bool = Field(default=False, description="Enable debug mode")
     HOST: str = Field(default="0.0.0.0", description="Host to bind the server")
@@ -30,11 +30,19 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30, description="JWT token expiry in minutes")
 
     # Security settings
-    ALLOWED_HOSTS: List[str] = Field(default=["*"], description="Allowed hosts for the application")
-    CORS_ORIGINS: List[str] = Field(
+    ALLOWED_HOSTS: Union[List[str], str] = Field(default=["*"], description="Allowed hosts for the application")
+    CORS_ORIGINS: Union[List[str], str] = Field(
         default=["http://localhost:3000", "http://localhost:8080"],
         description="CORS allowed origins"
     )
+
+    @field_validator('ALLOWED_HOSTS', 'CORS_ORIGINS')
+    @classmethod
+    def parse_comma_separated(cls, v):
+        """Parse comma-separated string into list."""
+        if isinstance(v, str):
+            return [item.strip() for item in v.split(',') if item.strip()]
+        return v
 
     # Database settings
     DATABASE_URL: Optional[PostgresDsn] = Field(
@@ -154,7 +162,11 @@ class Settings(BaseSettings):
     @property
     def database_url_sync(self) -> str:
         """Get synchronous database URL."""
-        return str(self.DATABASE_URL).replace("postgresql://", "postgresql://")
+        url = str(self.DATABASE_URL)
+        # Replace asyncpg with psycopg2 for sync operations
+        url = url.replace("postgresql+asyncpg://", "postgresql://")
+        url = url.replace("postgresql://", "postgresql+psycopg2://")
+        return url
 
     @property
     def database_url_async(self) -> str:

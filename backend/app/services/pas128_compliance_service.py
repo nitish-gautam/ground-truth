@@ -55,9 +55,12 @@ class PAS128ComplianceService:
                 specs = json.load(f)
             self.logger.info(f"Loaded PAS 128 specifications from {specs_path}")
             return specs
+        except FileNotFoundError:
+            self.logger.warning(f"PAS 128 specifications file not found at {specs_path}, using defaults")
+            return {}  # Return empty dict, will use hardcoded defaults
         except Exception as e:
             self.logger.error(f"Failed to load PAS 128 specifications: {e}")
-            raise
+            return {}  # Return empty dict instead of raising
 
     def _build_quality_level_requirements(self) -> Dict[QualityLevel, QualityLevelRequirements]:
         """Build structured quality level requirements from specifications."""

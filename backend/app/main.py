@@ -1,13 +1,15 @@
 """
-Underground Utility Detection Platform - FastAPI Backend
-===================================================
+Infrastructure Intelligence Platform - FastAPI Backend
+======================================================
 
-Main application entry point for GPR data processing and analysis.
+Main application entry point for GPR, BIM, and LiDAR data processing.
 Provides comprehensive APIs for:
 - GPR signal processing and feature extraction
+- BIM model validation and integration
+- LiDAR point cloud analysis
 - Environmental correlation analysis
 - Ground truth validation and accuracy assessment
-- Batch processing of Twente and Mojahid datasets
+- Batch processing of datasets (Twente, Mojahid, etc.)
 """
 
 import logging
@@ -36,7 +38,7 @@ from core.logging_config import setup_logging
 async def lifespan(app: FastAPI):
     """Application lifespan manager for startup and shutdown events."""
     # Startup
-    logger.info("Starting Underground Utility Detection Platform...")
+    logger.info("Starting Infrastructure Intelligence Platform...")
 
     # Setup logging
     setup_logging()
@@ -54,24 +56,25 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
-    logger.info("Shutting down Underground Utility Detection Platform...")
+    logger.info("Shutting down Infrastructure Intelligence Platform...")
 
 
 def create_application() -> FastAPI:
     """Create and configure the FastAPI application."""
 
     app = FastAPI(
-        title="Underground Utility Detection Platform",
+        title="Infrastructure Intelligence Platform",
         description="""
-        Comprehensive GPR data processing and analysis platform for underground utility detection.
+        Comprehensive multi-modal data processing platform for infrastructure intelligence.
 
         ## Features
 
-        * **GPR Data Processing**: Load and process Twente GPR dataset (125 scans)
-        * **Image Classification**: Process Mojahid dataset (2,239+ labeled images)
+        * **GPR Data Processing**: Ground Penetrating Radar signal analysis and utility detection
+        * **BIM Integration**: Building Information Modeling validation and integration
+        * **LiDAR Processing**: Point cloud analysis for construction monitoring
         * **Signal Processing**: Advanced filtering, noise removal, and feature extraction
         * **Environmental Analysis**: Correlation between environmental factors and detection accuracy
-        * **Ground Truth Validation**: Accuracy assessment and performance metrics
+        * **AI-Powered Reports**: PAS 128 compliant report generation with LLM integration
         * **Batch Processing**: Scalable processing for large datasets
 
         ## Datasets Supported
@@ -142,7 +145,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "service": "Underground Utility Detection Platform",
+        "service": "Infrastructure Intelligence Platform",
         "version": "1.0.0"
     }
 

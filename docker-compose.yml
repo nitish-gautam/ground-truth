@@ -1,0 +1,304 @@
+services:
+  # ============================================
+  # FRONTEND - React + Vite Development Server
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: infrastructure-frontend
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8002
+      - VITE_TILE_SERVER_URL=http://localhost:8080
+      - VITE_MINIO_ENDPOINT=http://localhost:9000
+    depends_on:
+      - backend
+      - tileserver
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ============================================
+  # BACKEND - FastAPI Application
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: infrastructure-backend
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./backend:/app
+      - ./data/gpr:/data/gpr
+      - ./data/bim:/data/bim
+      - ./data/lidar:/data/lidar
+      - ./datasets:/datasets
+    environment:
+      # Database
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+      # MinIO Storage
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
+      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - MINIO_SECURE=false
+
+      # Redis
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+      # Celery
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+      # Application
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG:-true}
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend,infrastructure-backend
+      - CORS_ORIGINS=http://localhost:3003,http://localhost:8002
+
+      # Optional: LLM APIs (Phase 2)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ============================================
+  # DATABASE - PostgreSQL with PostGIS + PGVector
+  # ============================================
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: infrastructure-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=en_US.utf8 --lc-ctype=en_US.utf8
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      - ./database/schemas:/docker-entrypoint-initdb.d/schemas:ro
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - pg_stat_statements.track=all
+      - -c
+      - max_connections=200
+      - -c
+      - shared_buffers=256MB
+
+  # ============================================
+  # OBJECT STORAGE - MinIO (S3-Compatible)
+  # ============================================
+  minio:
+    image: minio/minio:latest
+    container_name: infrastructure-minio
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    command: server /data --console-address ":9001"
+
+  # ============================================
+  # MINIO CLIENT - Bucket Creation (Init Container)
+  # ============================================
+  minio_client:
+    image: minio/mc:latest
+    container_name: infrastructure-minio-client
+    depends_on:
+      - minio
+    networks:
+      - infrastructure-network
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      mc alias set myminio http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      mc mb myminio/gpr-data || true;
+      mc mb myminio/bim-models || true;
+      mc mb myminio/lidar-scans || true;
+      mc mb myminio/documents || true;
+      mc mb myminio/reports || true;
+      mc policy set download myminio/gpr-data;
+      mc policy set download myminio/bim-models;
+      mc policy set download myminio/lidar-scans;
+      mc policy set download myminio/documents;
+      mc policy set download myminio/reports;
+      echo 'MinIO buckets created successfully';
+      exit 0;
+      "
+
+  # ============================================
+  # CACHE - Redis
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: infrastructure-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+
+  # ============================================
+  # TASK QUEUE - Celery Worker
+  # ============================================
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: infrastructure-celery-worker
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+    environment:
+      # Same as backend
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
+      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    command: celery -A app.celery_app worker --loglevel=info --concurrency=4
+
+  # ============================================
+  # CELERY MONITORING - Flower UI
+  # ============================================
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: infrastructure-flower
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - FLOWER_PORT=5555
+    depends_on:
+      - redis
+      - celery_worker
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    command: celery -A app.celery_app flower --port=5555
+
+  # ============================================
+  # TILE SERVER - TileServer-GL (Basemap)
+  # ============================================
+  tileserver:
+    image: maptiler/tileserver-gl:latest
+    container_name: infrastructure-tileserver
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/tiles:/data:ro
+    environment:
+      - TILESERVER_PORT=8080
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# ============================================
+# VOLUMES - Persistent Data Storage
+# ============================================
+volumes:
+  postgres_data:
+    driver: local
+    name: infrastructure_postgres_data
+  minio_data:
+    driver: local
+    name: infrastructure_minio_data
+  redis_data:
+    driver: local
+    name: infrastructure_redis_data
+
+# ============================================
+# NETWORKS
+# ============================================
+networks:
+  infrastructure-network:
+    driver: bridge
+    name: infrastructure_network
