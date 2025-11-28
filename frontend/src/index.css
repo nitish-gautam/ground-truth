@@ -1,11 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Brand Typography - Galano Grotesque fallback to Inter */
+  font-family: 'Galano Grotesque', Inter, system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Brand Colors */
+  --primary-color: #012A39;
+  --secondary-color: #019C4B;
+  --error-color: #FF0000;
+  --warning-color: #FF8500;
+  --info-color: #BCC7D3;
+  --success-color: #009C4A;
+  --background-color: #FFFFFF;
+  --paper-color: #FFFFFF;
+  --header-color: #FFFFFF;
+
+  color-scheme: light;
+  color: #012A39;
+  background-color: #FFFFFF;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

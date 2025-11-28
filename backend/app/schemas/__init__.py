@@ -9,3 +9,4 @@ from .pas128 import *
 from .dataset import *
 from .environmental import *
 from .gpr import *
+from .hs2 import *

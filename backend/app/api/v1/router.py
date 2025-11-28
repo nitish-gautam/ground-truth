@@ -15,7 +15,15 @@ from .endpoints import (
     processing,
     datasets,
     material_classification,
-    pas128_compliance
+    pas128_compliance,
+    hs2_assets,
+    hs2_deliverables,
+    hs2_rules,
+    hs2_dashboard,
+    monitoring,
+    gis,
+    bim,
+    progress_verification
 )
 
 api_router = APIRouter()
@@ -66,4 +74,57 @@ api_router.include_router(
     pas128_compliance.router,
     prefix="/compliance",
     tags=["pas128-compliance"]
+)
+
+# HS2 Assurance Intelligence Demonstrator Endpoints
+api_router.include_router(
+    hs2_assets.router,
+    prefix="/hs2",
+    tags=["hs2-assets"]
+)
+
+api_router.include_router(
+    hs2_deliverables.router,
+    prefix="/hs2",
+    tags=["hs2-deliverables"]
+)
+
+api_router.include_router(
+    hs2_rules.router,
+    prefix="/hs2",
+    tags=["hs2-taem-rules"]
+)
+
+api_router.include_router(
+    hs2_dashboard.router,
+    prefix="/hs2",
+    tags=["hs2-dashboard"]
+)
+
+# Monitoring endpoints (noise, vibration, environmental)
+api_router.include_router(
+    monitoring.router,
+    prefix="/monitoring",
+    tags=["monitoring"]
+)
+
+# GIS endpoints (shapefiles, route data)
+api_router.include_router(
+    gis.router,
+    prefix="/gis",
+    tags=["gis-data"]
+)
+
+# BIM endpoints (IFC models)
+api_router.include_router(
+    bim.router,
+    prefix="/bim",
+    tags=["bim-models"]
+)
+
+# Progress Verification endpoints (snapshots, point cloud, schedule, EVM)
+api_router.include_router(
+    progress_verification.router,
+    prefix="/progress",
+    tags=["progress-verification"]
 )

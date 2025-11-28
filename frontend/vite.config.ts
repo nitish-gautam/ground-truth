@@ -10,6 +10,12 @@ export default defineConfig({
     watch: {
       usePolling: true, // Needed for Docker volume mounting
     },
+    proxy: {
+      '/api': {
+        target: 'http://backend:8000',
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     host: '0.0.0.0',

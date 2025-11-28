@@ -12,6 +12,7 @@ from .environmental import EnvironmentalData, WeatherCondition, GroundCondition
 from .validation import GroundTruthData, ValidationResult, AccuracyMetrics
 from .utilities import UtilityRecord, UtilityMaterial, UtilityDiscipline
 from .ml_analytics import MLModel, FeatureVector, ModelPerformance, TrainingSession
+from .progress import HS2ProgressSnapshot, HS2PointCloudComparison, HS2ScheduleMilestone
 
 __all__ = [
     "BaseModel",
@@ -31,5 +32,8 @@ __all__ = [
     "MLModel",
     "FeatureVector",
     "ModelPerformance",
-    "TrainingSession"
+    "TrainingSession",
+    "HS2ProgressSnapshot",
+    "HS2PointCloudComparison",
+    "HS2ScheduleMilestone"
 ]
