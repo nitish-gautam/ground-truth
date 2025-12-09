@@ -13,6 +13,7 @@ sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
 alembic==1.13.1
 redis==5.0.1
+neo4j==5.14.1              # Graph database driver for relationship queries
 
 # Task Queue
 celery==5.3.4

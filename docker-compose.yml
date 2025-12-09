@@ -67,6 +67,11 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
+      # Neo4j Graph Database
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=hs2_graph_2024
+
       # Celery
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
@@ -84,6 +89,8 @@ services:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      neo4j:
         condition: service_healthy
       minio:
         condition: service_started
@@ -207,6 +214,38 @@ services:
     command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
 
   # ============================================
+  # GRAPH DATABASE - Neo4j
+  # ============================================
+  neo4j:
+    image: neo4j:5.14-community
+    container_name: hs2-neo4j
+    ports:
+      - "7474:7474"  # HTTP Browser UI
+      - "7687:7687"  # Bolt protocol
+    environment:
+      - NEO4J_AUTH=neo4j/hs2_graph_2024
+      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+      - NEO4J_dbms_memory_pagecache_size=512M
+      - NEO4J_dbms_memory_heap_initial__size=512M
+      - NEO4J_dbms_memory_heap_max__size=1G
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,gds.*
+      - NEO4J_dbms_security_procedures_allowlist=apoc.*,gds.*
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/var/lib/neo4j/import
+      - neo4j_plugins:/plugins
+    networks:
+      - infrastructure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p hs2_graph_2024 'RETURN 1' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # ============================================
   # TASK QUEUE - Celery Worker
   # ============================================
   celery_worker:
@@ -294,6 +333,18 @@ volumes:
   redis_data:
     driver: local
     name: infrastructure_redis_data
+  neo4j_data:
+    driver: local
+    name: hs2_neo4j_data
+  neo4j_logs:
+    driver: local
+    name: hs2_neo4j_logs
+  neo4j_import:
+    driver: local
+    name: hs2_neo4j_import
+  neo4j_plugins:
+    driver: local
+    name: hs2_neo4j_plugins
 
 # ============================================
 # NETWORKS

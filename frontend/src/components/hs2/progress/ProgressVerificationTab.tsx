@@ -26,6 +26,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { PointCloudUpload } from './PointCloudUpload';
+import { GraphVisualization } from '../explainability/GraphVisualization';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8002';
 
@@ -268,9 +269,9 @@ export const ProgressVerificationTab: React.FC = () => {
                 <Typography
                   variant="body2"
                   fontWeight={600}
-                  color={dashboardData.cost_variance_pct >= 0 ? 'success.main' : 'error.main'}
+                  color={(dashboardData.cost_variance_pct || 0) >= 0 ? 'success.main' : 'error.main'}
                 >
-                  {dashboardData.cost_variance_pct > 0 ? '+' : ''}{dashboardData.cost_variance_pct.toFixed(1)}%
+                  {(dashboardData.cost_variance_pct || 0) > 0 ? '+' : ''}{(dashboardData.cost_variance_pct || 0).toFixed(1)}%
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
@@ -299,7 +300,7 @@ export const ProgressVerificationTab: React.FC = () => {
               </Box>
             </Box>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              {dashboardData.cost_variance_pct >= 0 ?
+              {(dashboardData.cost_variance_pct || 0) >= 0 ?
                 'Project is under budget. Efficient resource utilization.' :
                 'Project is over budget. Review cost controls and forecast.'}
             </Typography>
@@ -400,6 +401,11 @@ export const ProgressVerificationTab: React.FC = () => {
         <PointCloudUpload assetId={dashboardData?.total_assets > 0 ? "sample-asset-id" : undefined} />
       </Box>
 
+      {/* Graph Explainability Section */}
+      <Box sx={{ mt: 4 }}>
+        <GraphVisualization />
+      </Box>
+
       {/* API Status Info */}
       <Paper elevation={1} sx={{ p: 3, mt: 3, bgcolor: 'success.50' }}>
         <Typography variant="h6" gutterBottom color="primary" fontWeight={600}>
@@ -444,6 +450,22 @@ export const ProgressVerificationTab: React.FC = () => {
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Multi-part upload with progress tracking
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <Typography variant="body2" fontWeight={600}>
+              ✅ Graph Database (Neo4j)
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Relationship queries, explainability, impact analysis
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <Typography variant="body2" fontWeight={600}>
+              ✅ Dependency Visualization
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              D3.js force-directed graphs, blocker identification
             </Typography>
           </Grid>
         </Grid>

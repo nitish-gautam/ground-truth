@@ -19,6 +19,7 @@ Health:      http://localhost:8002/health
 |---------|-----|---------------|
 | HS2 Dashboard | http://localhost:3003/hs2 | ❌ No |
 | Backend API | http://localhost:8002 | ❌ No |
+| Neo4j Browser | http://localhost:7474 | ✅ Yes |
 | MinIO Console | http://localhost:9001 | ✅ Yes |
 | PostgreSQL | localhost:5433 | ✅ Yes |
 | Redis | localhost:6379 | ❌ No |
@@ -53,6 +54,17 @@ docker exec -it infrastructure-postgres psql -U postgres -d infrastructure_db
 Host:        localhost:6379
 Password:    (none)
 Command:     redis-cli -h localhost -p 6379
+```
+
+### Neo4j Graph Database
+```
+Browser URL: http://localhost:7474
+Bolt URI:    bolt://localhost:7687
+Username:    neo4j
+Password:    hs2_graph_2024
+
+# Connect via Cypher Shell
+docker exec -it hs2-neo4j cypher-shell -u neo4j -p hs2_graph_2024
 ```
 
 ---

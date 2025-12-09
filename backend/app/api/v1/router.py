@@ -23,7 +23,8 @@ from .endpoints import (
     monitoring,
     gis,
     bim,
-    progress_verification
+    progress_verification,
+    graph
 )
 
 api_router = APIRouter()
@@ -127,4 +128,10 @@ api_router.include_router(
     progress_verification.router,
     prefix="/progress",
     tags=["progress-verification"]
+)
+
+# Graph Database endpoints (Neo4j - explainability, visualization, impact analysis)
+api_router.include_router(
+    graph.router,
+    tags=["graph-database"]
 )

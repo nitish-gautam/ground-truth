@@ -141,10 +141,11 @@ export const HS2GISTab: React.FC = () => {
     queryFn: async () => {
       const response = await axios.get('/api/v1/gis/layers');
       return response.data;
-    }
+    },
+    enabled: true // Enabled: Load real HS2 shapefile data
   });
 
-  // Fetch GeoJSON for selected route layer
+  // Fetch GeoJSON for selected route layer - ALWAYS preload to avoid showing fallback
   const { data: routeGeoJSON, isLoading: routeLoading } = useQuery({
     queryKey: ['gis-route-geojson'],
     queryFn: async () => {
@@ -155,7 +156,9 @@ export const HS2GISTab: React.FC = () => {
       console.log('✅ Route GeoJSON loaded:', response.data.metadata?.feature_count, 'features');
       return response.data;
     },
-    enabled: selectedLayers.includes('route')
+    enabled: true, // Always preload to prevent showing hardcoded fallback
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    refetchOnWindowFocus: false
   });
 
   // Fetch GeoJSON for construction compounds
@@ -169,7 +172,7 @@ export const HS2GISTab: React.FC = () => {
       console.log('✅ Construction GeoJSON loaded:', response.data.metadata?.feature_count, 'features');
       return response.data;
     },
-    enabled: selectedLayers.includes('construction')
+    enabled: false // Disabled: Shapefile not available yet
   });
 
   // Fetch GeoJSON for landscape character areas
@@ -275,7 +278,11 @@ export const HS2GISTab: React.FC = () => {
         <Typography variant="body2">
           <strong>Interactive HS2 Route Map</strong> - Phase 2a + Ecology & Legal Data
           <br />
-          {routeGeoJSON ? (
+          {routeLoading ? (
+            <>
+              <CircularProgress size={16} sx={{ mr: 1 }} /> Loading HS2 route shapefile data...
+            </>
+          ) : routeGeoJSON ? (
             <>
               ✅ Displaying <strong>real shapefile data</strong>: {routeGeoJSON.metadata?.feature_count || 0} route polygons
               {constructionGeoJSON && `, ${constructionGeoJSON.metadata?.feature_count || 0} construction compounds`}
@@ -287,7 +294,7 @@ export const HS2GISTab: React.FC = () => {
               {layersLoading && <CircularProgress size={16} sx={{ ml: 1 }} />}
             </>
           ) : (
-            <>Loading {gisLayersData?.total_count || 420} shapefiles from HS2 datasets...</>
+            <>⚠️ Route data not available</>
           )}
         </Typography>
       </Alert>
@@ -425,7 +432,8 @@ export const HS2GISTab: React.FC = () => {
                 <FitBounds bounds={routeGeoJSON.metadata.bounds as [number, number, number, number]} />
               )}
 
-              {/* HS2 Route Line - REAL DATA from shapefile */}
+              {/* HS2 Route Line - REAL DATA from shapefile or fallback to basic route */}
+              {/* HS2 Route - REAL SHAPEFILE DATA ONLY */}
               {selectedLayers.includes('route') && routeGeoJSON?.features && (
                 <GeoJSON
                   key={`route-geojson-${routeGeoJSON.metadata?.feature_count}`}
