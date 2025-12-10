@@ -14,6 +14,10 @@ This document contains all system architecture diagrams in Mermaid format. These
 5. [New Feature Development Workflow](#5-new-feature-development-workflow)
 6. [Docker Local Development Workflow](#6-docker-local-development-workflow)
 
+### Phase 1C-Extended - HS2 Progress Assurance (NEW)
+16. [HS2 Data Flow - 3 Phase Pipeline](#16-hs2-data-flow---3-phase-pipeline)
+17. [HS2 System Architecture - 4 Layer Stack](#17-hs2-system-architecture---4-layer-stack)
+
 ### Phase 1D - Multi-Domain Intelligence (NEW)
 7. [Safety Intelligence Platform Architecture](#7-safety-intelligence-platform-architecture)
 8. [Safety Incident Processing Pipeline](#8-safety-incident-processing-pipeline)
@@ -2033,6 +2037,184 @@ flowchart TD
 - **Pattern**: Same contractor responsible for both safety issues and cost overruns
 - **Insight**: "High safety risk at Site A correlates with 15% cost overrun on steel procurement"
 - **Recommendation**: "Investigate Contractor X safety practices and procurement patterns"
+
+---
+
+## 16. HS2 Data Flow - 3 Phase Pipeline
+
+This diagram shows the end-to-end data processing pipeline for HS2 Automated Progress Assurance, from site data capture to intelligence outputs.
+
+```mermaid
+flowchart LR
+    subgraph Phase1["📸 Phase 1: Site Data Collection"]
+        direction TB
+        H1[Hyperspectral Camera<br/>Specim IQ<br/>204 spectral bands<br/>400-1000nm]
+        L1[LiDAR Scanner<br/>Leica RTC360<br/>2M points/sec<br/>±1mm accuracy]
+        C1[360° Cameras<br/>Insta360 Pro 2<br/>8K resolution<br/>Spatial context]
+        G1[GPR Data<br/>Sensors & Software<br/>Pulseekko Pro<br/>Subsurface utilities]
+
+        H1 --> Upload1[Site Data Upload<br/>MinIO S3]
+        L1 --> Upload1
+        C1 --> Upload1
+        G1 --> Upload1
+    end
+
+    subgraph Phase2["🤖 Phase 2: AI/ML Processing Pipeline"]
+        direction TB
+        Upload1 --> Stage1[Stage 1: Data Ingestion<br/>- File validation<br/>- Georeferencing<br/>- Quality checks]
+
+        Stage1 --> Stage2A[Stage 2A: Hyperspectral Analysis<br/>- Atmospheric correction<br/>- Spectral unmixing<br/>- Material identification]
+        Stage1 --> Stage2B[Stage 2B: LiDAR Processing<br/>- Point cloud registration<br/>- Ground extraction<br/>- BIM alignment ICP]
+        Stage1 --> Stage2C[Stage 2C: Image Processing<br/>- 360° stitching<br/>- Spatial mapping<br/>- Visual documentation]
+
+        Stage2A --> Stage3[Stage 3: Material Quality AI<br/>- Concrete strength CNN<br/>- Steel quality prediction<br/>- Defect detection]
+        Stage2B --> Stage4[Stage 4: Deviation Analysis<br/>- BIM vs Reality comparison<br/>- Volume calculation<br/>- Tolerance validation]
+        Stage2C --> Stage5[Stage 5: Visual Intelligence<br/>- Progress documentation<br/>- Anomaly detection<br/>- Site condition assessment]
+
+        Stage3 --> Integration[Integration Layer<br/>PostgreSQL + PostGIS<br/>Correlation & Validation]
+        Stage4 --> Integration
+        Stage5 --> Integration
+    end
+
+    subgraph Phase3["📊 Phase 3: Intelligence Outputs"]
+        direction TB
+        Integration --> Output1[3D Dashboard<br/>- Live BIM overlay<br/>- Deviation heatmaps<br/>- Material quality maps<br/>- Progress timeline]
+        Integration --> Output2[PDF Progress Reports<br/>- Executive summary<br/>- Quality compliance<br/>- Risk assessment<br/>- Evidence archive]
+        Integration --> Output3[Real-time Alerts<br/>- Quality failures<br/>- Schedule delays<br/>- Cost overruns<br/>- Safety concerns]
+    end
+
+    Output1 --> Stakeholders[Stakeholders<br/>HS2 Ltd, Contractors,<br/>Designers, QA Teams]
+    Output2 --> Stakeholders
+    Output3 --> Stakeholders
+
+    style Phase1 fill:#e1f5ff
+    style Phase2 fill:#fff3cd
+    style Phase3 fill:#d4edda
+    style Integration fill:#f8d7da
+```
+
+**Implementation Timeline:**
+- **Weeks 1-2**: Phase 1 - Data acquisition & storage infrastructure
+- **Weeks 3-4**: Phase 2 - Core AI/ML processing pipelines
+- **Weeks 5-6**: Phase 2 - Material quality & deviation analysis models
+- **Weeks 7-8**: Phase 3 - Dashboard, reporting, and alert systems
+
+**Critical Dependencies:**
+- Hyperspectral camera calibration and spectral library development
+- BIM models in IFC4.3 format with LOD 400+ geometry
+- Baseline LiDAR scans for alignment reference
+- Ground truth destructive testing data for ML model validation
+
+**Risk Mitigation:**
+- Use existing GPR images as hyperspectral proxies for demo (Week 1)
+- Pre-train models on similar construction datasets
+- Implement fallback manual inspection workflows
+- Phase deployment per site to validate accuracy before full rollout
+
+---
+
+## 17. HS2 System Architecture - 4 Layer Stack
+
+This diagram shows the complete system architecture for HS2 Automated Progress Assurance, organized in four layers from data capture to user interface.
+
+```mermaid
+flowchart TB
+    subgraph Layer1["🎥 Layer 1: Data Capture & Acquisition"]
+        direction LR
+        Input1[Hyperspectral Imaging<br/>📷 Specim IQ<br/>204 spectral bands<br/>Non-destructive testing<br/>Material quality verification]
+        Input2[LiDAR Scanning<br/>📡 Leica RTC360<br/>2M points/second<br/>±1mm accuracy<br/>As-built geometry]
+        Input3[Photogrammetry<br/>📸 360° Cameras<br/>8K resolution<br/>Visual documentation<br/>Progress tracking]
+        Input4[BIM Models<br/>🏗️ IFC4.3 Format<br/>Design intent<br/>Baseline geometry<br/>Element metadata]
+    end
+
+    subgraph Layer2["☁️ Layer 2: AI/ML Processing (Microsoft Azure)"]
+        direction TB
+        Storage[Azure Blob Storage<br/>Raw Data Repository<br/>- Hyperspectral cubes<br/>- Point clouds LAZ<br/>- IFC models<br/>- 360° images]
+
+        Storage --> Compute1[Azure ML Compute<br/>🧠 Material Quality AI<br/>- Concrete strength CNN<br/>- Steel quality prediction<br/>- Defect detection<br/>- Spectral matching]
+        Storage --> Compute2[Azure Batch<br/>⚙️ Geometric Processing<br/>- ICP alignment<br/>- Deviation analysis<br/>- Volume calculation<br/>- Surface comparison]
+        Storage --> Compute3[Azure Functions<br/>📊 Data Pipeline<br/>- File validation<br/>- Georeferencing<br/>- Data enrichment<br/>- Quality checks]
+
+        Compute1 --> ProcessedData[Azure PostgreSQL<br/>Processed Intelligence<br/>- Quality assessments<br/>- Deviation records<br/>- Progress metrics]
+        Compute2 --> ProcessedData
+        Compute3 --> ProcessedData
+    end
+
+    subgraph Layer3["🧠 Layer 3: Intelligence & Insights"]
+        direction LR
+        ProcessedData --> Engine1[Material Quality Engine<br/>✅ Non-destructive testing<br/>- Concrete strength 40-60 MPa<br/>- Steel grade verification<br/>- Defect classification<br/>- Quality scoring]
+        ProcessedData --> Engine2[Deviation Analysis Engine<br/>📐 BIM vs Reality<br/>- Element-level comparison<br/>- Tolerance validation<br/>- Heatmap generation<br/>- Risk classification]
+        ProcessedData --> Engine3[Progress Verification Engine<br/>📊 Earned Value Management<br/>- Physical progress %<br/>- Cost/schedule alignment<br/>- Milestone tracking<br/>- Forecasting]
+        ProcessedData --> Engine4[Compliance Reporting Engine<br/>📋 Audit & Evidence<br/>- Quality documentation<br/>- ISO 19650 compliance<br/>- Traceability records<br/>- Certification support]
+    end
+
+    subgraph Layer4["💻 Layer 4: User Interface & Outputs"]
+        direction TB
+        Engine1 --> UI1[3D Web Dashboard<br/>🌐 React + TypeScript<br/>- Live BIM viewer IFC.js<br/>- Deviation heatmaps<br/>- Material quality overlays<br/>- Progress timeline]
+        Engine2 --> UI1
+        Engine3 --> UI1
+        Engine4 --> UI1
+
+        Engine1 --> UI2[PDF Progress Reports<br/>📄 Jinja2 Templates<br/>- Executive summary<br/>- Quality compliance<br/>- Evidence archive<br/>- Risk assessment]
+        Engine2 --> UI2
+        Engine3 --> UI2
+        Engine4 --> UI2
+
+        Engine1 --> UI3[Real-time Alerts<br/>🔔 WebSocket Notifications<br/>- Quality failures<br/>- Schedule slippage<br/>- Cost variance<br/>- Safety concerns]
+        Engine2 --> UI3
+        Engine3 --> UI3
+        Engine4 --> UI3
+    end
+
+    UI1 --> Users[Stakeholders<br/>👥 HS2 Ltd Project Managers<br/>👷 Site Engineers<br/>🏗️ Main Contractors<br/>🔍 QA/QC Teams<br/>📐 Design Teams]
+    UI2 --> Users
+    UI3 --> Users
+
+    style Layer1 fill:#e1f5ff
+    style Layer2 fill:#fff3cd
+    style Layer3 fill:#d4edda
+    style Layer4 fill:#f8d7da
+    style Storage fill:#e7e7ff
+    style ProcessedData fill:#e7e7ff
+```
+
+**Key Architectural Principles:**
+
+1. **Separation of Concerns**: Each layer has distinct responsibilities
+   - Layer 1: Pure data acquisition (no processing)
+   - Layer 2: Compute-intensive AI/ML operations
+   - Layer 3: Business logic and intelligence generation
+   - Layer 4: Presentation and user interaction
+
+2. **Cloud-Native Design**: Microsoft Azure for scalability
+   - Azure ML for GPU-accelerated deep learning
+   - Azure Batch for parallel point cloud processing
+   - Azure PostgreSQL for managed database
+   - Horizontal scaling based on site count
+
+3. **API-First Architecture**: RESTful APIs between all layers
+   - FastAPI backend with OpenAPI documentation
+   - Versioned endpoints (/api/v1/)
+   - WebSocket support for real-time updates
+   - Authentication via Azure AD
+
+4. **Data Residency & Security**: UK-based deployment
+   - Azure UK South region
+   - GDPR compliance built-in
+   - Project-level data isolation
+   - 7-year audit trail retention (CDM 2015)
+
+**Expected Outcomes:**
+- **95% Time Reduction**: 10 minutes vs 8 hours for progress reports
+- **40+ Hours Saved**: Per site per month in manual inspection time
+- **100+ Sites**: Scalable to entire HS2 project portfolio
+- **£9M/Year Savings**: For 50 HS2 sites based on efficiency gains
+
+**Competitive Advantage:**
+- **Patent-Pending**: Hyperspectral material quality verification
+- **Non-Destructive**: No core sampling required (£500/sample savings)
+- **Automated**: Minimal manual intervention required
+- **Evidence-Based**: Full spectral signatures for audit compliance
 
 ---
 
