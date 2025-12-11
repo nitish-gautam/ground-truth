@@ -24,7 +24,9 @@ from .endpoints import (
     gis,
     bim,
     progress_verification,
-    graph
+    graph,
+    lidar,
+    hyperspectral
 )
 
 api_router = APIRouter()
@@ -134,4 +136,18 @@ api_router.include_router(
 api_router.include_router(
     graph.router,
     tags=["graph-database"]
+)
+
+# LiDAR Data endpoints (DTM tiles, elevation profiles, coverage)
+api_router.include_router(
+    lidar.router,
+    prefix="/lidar",
+    tags=["lidar-data"]
+)
+
+# Hyperspectral Imaging endpoints (material analysis, concrete quality, defect detection)
+# Note: Router already includes /progress/hyperspectral prefix
+api_router.include_router(
+    hyperspectral.router,
+    tags=["hyperspectral-imaging"]
 )

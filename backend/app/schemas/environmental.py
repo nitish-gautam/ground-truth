@@ -7,7 +7,7 @@ Pydantic schemas for environmental correlation analysis API endpoints.
 
 from typing import Dict, Any, List, Optional, Union
 from datetime import datetime
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class AnalysisConfig(BaseModel):
@@ -88,7 +88,8 @@ class AnalysisConfig(BaseModel):
         description="Enable predictive modeling"
     )
 
-    @validator('multiple_comparison_method')
+    @field_validator('multiple_comparison_method')
+    @classmethod
     def validate_comparison_method(cls, v):
         allowed_methods = ['bonferroni', 'fdr', 'benjamini_hochberg']
         if v not in allowed_methods:
@@ -128,7 +129,8 @@ class EnvironmentalAnalysisRequest(BaseModel):
         description="Generate comprehensive analysis report"
     )
 
-    @validator('metadata_csv_path', 'performance_csv_path')
+    @field_validator('metadata_csv_path', 'performance_csv_path')
+    @classmethod
     def validate_csv_path(cls, v):
         if v is not None and not v.endswith('.csv'):
             raise ValueError("CSV file path must end with .csv")

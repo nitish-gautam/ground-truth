@@ -120,7 +120,34 @@ export const ProgressVerificationTab: React.FC = () => {
         and £{(dashboardData.total_budget / 1_000_000).toFixed(1)}M budget.
       </Alert>
 
+      {/* Data Source Legend */}
+      <Paper elevation={1} sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}>
+        <Typography variant="body2" fontWeight={600} gutterBottom>
+          Data Source Legend:
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Chip label="REAL DATA" color="success" size="small" />
+            <Typography variant="caption" color="text.secondary">
+              From PostgreSQL database with actual HS2 asset data
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Chip label="⚠️ SYNTHETIC DATA" color="warning" size="small" sx={{ bgcolor: 'rgb(254, 243, 199)', color: 'rgb(146, 64, 14)' }} />
+            <Typography variant="caption" color="text.secondary">
+              Demo/sample data for testing new features
+            </Typography>
+          </Box>
+        </Box>
+      </Paper>
+
       {/* Key Metrics - REAL DATA */}
+      <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Typography variant="h5" fontWeight={600} color="primary">
+          Key Performance Metrics
+        </Typography>
+        <Chip label="REAL DATA" color="success" size="small" />
+      </Box>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {/* Physical Progress (TAEM Score) */}
         <Grid item xs={12} md={3}>
@@ -223,6 +250,12 @@ export const ProgressVerificationTab: React.FC = () => {
       </Grid>
 
       {/* Detailed Metrics */}
+      <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Typography variant="h5" fontWeight={600} color="primary">
+          Detailed Progress Metrics
+        </Typography>
+        <Chip label="REAL DATA" color="success" size="small" />
+      </Box>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {/* Certificates Progress */}
         <Grid item xs={12} md={6}>
@@ -398,11 +431,17 @@ export const ProgressVerificationTab: React.FC = () => {
 
       {/* Point Cloud Upload Section */}
       <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom fontWeight={600} color="primary">
+          3D Point Cloud Verification
+        </Typography>
         <PointCloudUpload assetId={dashboardData?.total_assets > 0 ? "sample-asset-id" : undefined} />
       </Box>
 
       {/* Graph Explainability Section */}
       <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom fontWeight={600} color="primary">
+          Dependency & Impact Analysis
+        </Typography>
         <GraphVisualization />
       </Box>
 
@@ -425,7 +464,7 @@ export const ProgressVerificationTab: React.FC = () => {
               ✅ API Endpoints Operational
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              12 RESTful endpoints at /api/v1/progress/*
+              19 RESTful endpoints (/api/v1/progress/*, /api/v1/lidar/*)
             </Typography>
           </Grid>
           <Grid item xs={12} md={3}>
