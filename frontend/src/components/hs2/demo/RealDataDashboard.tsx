@@ -44,6 +44,7 @@ import {
   Warning,
   Info
 } from '@mui/icons-material';
+import { DataSourceBadge } from '../../common/DataSourceBadge';
 import {
   BarChart,
   Bar,
@@ -348,12 +349,7 @@ export const RealDataDashboard: React.FC = () => {
               <Typography variant="h6" fontWeight={600}>
                 {avgScore}/100
               </Typography>
-              <Chip
-                label="Real Data"
-                color="success"
-                size="small"
-                sx={{ height: 18, fontSize: '0.65rem', fontWeight: 600 }}
-              />
+              <DataSourceBadge source="demo" size="small" sx={{ height: 18, fontSize: '0.65rem' }} />
             </Stack>
             <Chip
               label={avgScore >= 85 ? 'GOOD' : avgScore >= 70 ? 'FAIR' : 'POOR'}
@@ -581,7 +577,7 @@ export const RealDataDashboard: React.FC = () => {
                         <Typography variant="h6" fontWeight={600}>
                           BIM 3D Model - Geometric Analysis
                         </Typography>
-                        <Chip label="Real Data" color="success" size="small" />
+                        <DataSourceBadge source="demo" />
                       </Stack>
                       <Typography variant="body2" color="text.secondary" mb={2}>
                         Showing {selectedData.length} segment(s) with {selectedData.reduce((sum, s) => sum + s.lidar_points, 0).toLocaleString()} LiDAR points
@@ -634,7 +630,7 @@ export const RealDataDashboard: React.FC = () => {
                         <Typography variant="h6" fontWeight={600}>
                           LiDAR Point Cloud
                         </Typography>
-                        <Chip label="Real Data" color="success" size="small" />
+                        <DataSourceBadge source="demo" />
                       </Stack>
                       <Typography variant="body2" color="text.secondary" mb={2}>
                         Showing {pointCloudData.length} sampled points from {selectedData.reduce((sum, s) => sum + s.lidar_points, 0).toLocaleString()} total LiDAR points
@@ -677,7 +673,7 @@ export const RealDataDashboard: React.FC = () => {
                         <Typography variant="h6" fontWeight={600}>
                           Hyperspectral Strength Heatmap
                         </Typography>
-                        <Chip label="Real Data" color="success" size="small" />
+                        <DataSourceBadge source="demo" />
                       </Stack>
                       <Typography variant="body2" color="text.secondary" mb={2}>
                         Concrete strength analysis from 204-band hyperspectral imaging
@@ -720,7 +716,7 @@ export const RealDataDashboard: React.FC = () => {
                         <Typography variant="h6" fontWeight={600}>
                           Visual Defect Detection
                         </Typography>
-                        <Chip label="Real Data" color="success" size="small" />
+                        <DataSourceBadge source="demo" />
                       </Stack>
                       <Typography variant="body2" color="text.secondary" mb={2}>
                         Showing {selectedDefects.length} defect(s) in {selectedSegments.length} segment(s)

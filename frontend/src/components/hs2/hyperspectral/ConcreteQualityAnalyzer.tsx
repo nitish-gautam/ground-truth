@@ -388,7 +388,7 @@ export function ConcreteQualityAnalyzer() {
                           Location: ({defect.location_x}, {defect.location_y})
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          Confidence: {(defect.confidence * 100).toFixed(1)}%
+                          Confidence: {defect.confidence.toFixed(1)}%
                         </Typography>
                         <Chip
                           label={defect.severity.toUpperCase()}

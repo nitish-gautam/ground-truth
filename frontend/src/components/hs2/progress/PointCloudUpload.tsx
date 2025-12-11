@@ -232,6 +232,7 @@ export const PointCloudUpload: React.FC<PointCloudUploadProps> = ({ assetId }) =
                   id="baseline-file-upload"
                   type="file"
                   onChange={handleBaselineFileChange}
+                  aria-label="Upload baseline point cloud file (LAS, LAZ, or PLY format)"
                 />
                 <label htmlFor="baseline-file-upload">
                   <Button
@@ -239,6 +240,7 @@ export const PointCloudUpload: React.FC<PointCloudUploadProps> = ({ assetId }) =
                     component="span"
                     fullWidth
                     endIcon={<CloudUpload />}
+                    aria-label="Select baseline point cloud file"
                     sx={{
                       bgcolor: 'secondary.dark',
                       color: 'secondary.contrastText',
@@ -285,6 +287,7 @@ export const PointCloudUpload: React.FC<PointCloudUploadProps> = ({ assetId }) =
                   id="current-file-upload"
                   type="file"
                   onChange={handleCurrentFileChange}
+                  aria-label="Upload current site scan file (LAS, LAZ, or PLY format)"
                 />
                 <label htmlFor="current-file-upload">
                   <Button
@@ -292,6 +295,7 @@ export const PointCloudUpload: React.FC<PointCloudUploadProps> = ({ assetId }) =
                     component="span"
                     fullWidth
                     endIcon={<CloudUpload />}
+                    aria-label="Select current site scan file"
                     sx={{
                       bgcolor: 'secondary.dark',
                       color: 'secondary.contrastText',

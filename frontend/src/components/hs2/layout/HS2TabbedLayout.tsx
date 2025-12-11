@@ -103,6 +103,9 @@ export const HS2TabbedLayout: React.FC<HS2TabbedLayoutProps> = ({ children }) =>
           <Tabs
             value={currentTab}
             onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
             aria-label="HS2 workspace navigation tabs"
             sx={{
               '& .MuiTab-root': {

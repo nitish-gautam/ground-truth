@@ -27,6 +27,8 @@ import {
 import axios from 'axios';
 import { PointCloudUpload } from './PointCloudUpload';
 import { GraphVisualization } from '../explainability/GraphVisualization';
+import { DataSourceBadge } from '../../common/DataSourceBadge';
+import { ErrorRetry } from '../../common/ErrorRetry';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8002';
 
@@ -50,21 +52,21 @@ export const ProgressVerificationTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${API_BASE_URL}/api/v1/hs2/dashboard/summary`);
-        setDashboardData(response.data);
-        setError(null);
-      } catch (err: any) {
-        console.error('Error fetching dashboard data:', err);
-        setError(err.message || 'Failed to load dashboard data');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.get(`${API_BASE_URL}/api/v1/hs2/dashboard/summary`);
+      setDashboardData(response.data);
+    } catch (err: any) {
+      console.error('Error fetching dashboard data:', err);
+      setError(err.message || 'Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDashboardData();
   }, []);
 
@@ -78,23 +80,38 @@ export const ProgressVerificationTab: React.FC = () => {
 
   if (error || !dashboardData) {
     return (
-      <Alert severity="error">
-        Failed to load progress data: {error || 'Unknown error'}
-      </Alert>
+      <ErrorRetry
+        error={error || 'Failed to load progress data: Unknown error'}
+        onRetry={fetchDashboardData}
+        severity="error"
+      />
     );
   }
 
-  // Calculate progress metrics from real data
-  const deliverablesProgress = (dashboardData.submitted_deliverables / dashboardData.total_deliverables) * 100;
-  const certificatesProgress = (dashboardData.issued_certificates / dashboardData.total_certificates) * 100;
-  const budgetSpent = (dashboardData.total_actual / dashboardData.total_budget) * 100;
+  // Calculate progress metrics from real data (with safe defaults for missing fields)
+  const totalDeliverables = dashboardData.total_deliverables || 0;
+  const submittedDeliverables = dashboardData.submitted_deliverables || 0;
+  const totalCertificates = dashboardData.total_certificates || 0;
+  const issuedCertificates = dashboardData.issued_certificates || 0;
+  const totalBudget = dashboardData.total_budget || 0;
+  const totalActual = dashboardData.total_actual || 0;
 
-  // Calculate EVM metrics
-  const physicalProgress = dashboardData.avg_taem_score; // Use TAEM score as proxy for physical progress
+  const deliverablesProgress = totalDeliverables > 0
+    ? (submittedDeliverables / totalDeliverables) * 100
+    : 0;
+  const certificatesProgress = totalCertificates > 0
+    ? (issuedCertificates / totalCertificates) * 100
+    : 0;
+  const budgetSpent = totalBudget > 0
+    ? (totalActual / totalBudget) * 100
+    : 0;
+
+  // Calculate EVM metrics with safe division
+  const physicalProgress = dashboardData.avg_taem_score || 0; // Use TAEM score as proxy
   const costProgress = budgetSpent;
-  const cpi = physicalProgress / budgetSpent; // Simplified CPI calculation
-  const scheduleProgress = deliverablesProgress; // Use deliverables as schedule proxy
-  const spi = physicalProgress / deliverablesProgress; // Simplified SPI
+  const cpi = budgetSpent > 0 ? physicalProgress / budgetSpent : 0; // Avoid division by zero
+  const scheduleProgress = deliverablesProgress;
+  const spi = deliverablesProgress > 0 ? physicalProgress / deliverablesProgress : 0; // Avoid division by zero
 
   // Asset status
   const totalAssets = dashboardData.total_assets;
@@ -116,37 +133,17 @@ export const ProgressVerificationTab: React.FC = () => {
 
       {/* Alert Banner */}
       <Alert severity="success" icon={<CheckCircle />} sx={{ mb: 3 }}>
-        <strong>Live Data Connected</strong> - Showing real metrics from {totalAssets} assets, {dashboardData.total_deliverables} deliverables,
-        and £{(dashboardData.total_budget / 1_000_000).toFixed(1)}M budget.
+        <strong>Live Data Connected</strong> - Showing real metrics from {totalAssets} assets via PostgreSQL database.
+        {totalDeliverables > 0 && ` Tracking ${totalDeliverables} deliverables.`}
+        {totalBudget > 0 && ` Budget: £${(totalBudget / 1_000_000).toFixed(1)}M.`}
       </Alert>
 
-      {/* Data Source Legend */}
-      <Paper elevation={1} sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}>
-        <Typography variant="body2" fontWeight={600} gutterBottom>
-          Data Source Legend:
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Chip label="REAL DATA" color="success" size="small" />
-            <Typography variant="caption" color="text.secondary">
-              From PostgreSQL database with actual HS2 asset data
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Chip label="⚠️ SYNTHETIC DATA" color="warning" size="small" sx={{ bgcolor: 'rgb(254, 243, 199)', color: 'rgb(146, 64, 14)' }} />
-            <Typography variant="caption" color="text.secondary">
-              Demo/sample data for testing new features
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
-
-      {/* Key Metrics - REAL DATA */}
+      {/* Key Metrics - LIVE DATA */}
       <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
         <Typography variant="h5" fontWeight={600} color="primary">
           Key Performance Metrics
         </Typography>
-        <Chip label="REAL DATA" color="success" size="small" />
+        <DataSourceBadge source="live" />
       </Box>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {/* Physical Progress (TAEM Score) */}
@@ -190,8 +187,13 @@ export const ProgressVerificationTab: React.FC = () => {
                 color={cpi >= 1.0 ? 'success' : 'warning'}
               />
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                £{(dashboardData.total_actual / 1_000_000).toFixed(1)}M of £{(dashboardData.total_budget / 1_000_000).toFixed(1)}M |
-                CPI: {cpi.toFixed(2)} {cpi >= 1.0 ? '(Efficient)' : '(Over budget)'}
+                {totalBudget > 0 ? (
+                  <>
+                    £{(totalActual / 1_000_000).toFixed(1)}M of £{(totalBudget / 1_000_000).toFixed(1)}M | CPI: {cpi.toFixed(2)} {cpi >= 1.0 ? '(Efficient)' : '(Over budget)'}
+                  </>
+                ) : (
+                  'Budget data pending configuration'
+                )}
               </Typography>
             </CardContent>
           </Card>
@@ -215,8 +217,11 @@ export const ProgressVerificationTab: React.FC = () => {
                 color="warning"
               />
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                {dashboardData.submitted_deliverables} of {dashboardData.total_deliverables} submitted |
-                SPI: {spi.toFixed(2)}
+                {totalDeliverables > 0 ? (
+                  <>{submittedDeliverables} of {totalDeliverables} submitted | SPI: {spi.toFixed(2)}</>
+                ) : (
+                  'Deliverables tracking pending configuration'
+                )}
               </Typography>
             </CardContent>
           </Card>
@@ -254,7 +259,7 @@ export const ProgressVerificationTab: React.FC = () => {
         <Typography variant="h5" fontWeight={600} color="primary">
           Detailed Progress Metrics
         </Typography>
-        <Chip label="REAL DATA" color="success" size="small" />
+        <DataSourceBadge source="live" />
       </Box>
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {/* Certificates Progress */}
@@ -269,7 +274,7 @@ export const ProgressVerificationTab: React.FC = () => {
                   Certificates Issued
                 </Typography>
                 <Typography variant="body2" fontWeight={600}>
-                  {dashboardData.issued_certificates} / {dashboardData.total_certificates}
+                  {issuedCertificates} / {totalCertificates}
                 </Typography>
               </Box>
               <LinearProgress
@@ -311,13 +316,13 @@ export const ProgressVerificationTab: React.FC = () => {
                 <Box>
                   <Typography variant="caption" color="text.secondary">Budget</Typography>
                   <Typography variant="body1" fontWeight={600}>
-                    £{(dashboardData.total_budget / 1_000_000).toFixed(2)}M
+                    {totalBudget > 0 ? `£${(totalBudget / 1_000_000).toFixed(2)}M` : 'N/A'}
                   </Typography>
                 </Box>
                 <Box>
                   <Typography variant="caption" color="text.secondary">Actual</Typography>
                   <Typography variant="body1" fontWeight={600}>
-                    £{(dashboardData.total_actual / 1_000_000).toFixed(2)}M
+                    {totalActual > 0 ? `£${(totalActual / 1_000_000).toFixed(2)}M` : 'N/A'}
                   </Typography>
                 </Box>
                 <Box>
@@ -327,7 +332,9 @@ export const ProgressVerificationTab: React.FC = () => {
                     fontWeight={600}
                     color={dashboardData.cost_variance_pct >= 0 ? 'success.main' : 'error.main'}
                   >
-                    £{((dashboardData.total_budget - dashboardData.total_actual) / 1_000_000).toFixed(2)}M
+                    {totalBudget > 0 && totalActual > 0
+                      ? `£${((totalBudget - totalActual) / 1_000_000).toFixed(2)}M`
+                      : 'N/A'}
                   </Typography>
                 </Box>
               </Box>
@@ -376,7 +383,9 @@ export const ProgressVerificationTab: React.FC = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="caption">Estimate at Completion (EAC):</Typography>
                   <Typography variant="caption" fontWeight={600}>
-                    £{((dashboardData.total_budget / cpi) / 1_000_000).toFixed(2)}M
+                    {totalBudget > 0 && cpi > 0
+                      ? `£${((totalBudget / cpi) / 1_000_000).toFixed(2)}M`
+                      : 'N/A'}
                   </Typography>
                 </Box>
               </Box>
