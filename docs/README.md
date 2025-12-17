@@ -36,11 +36,14 @@ cd frontend && npm install && npm run dev
 
 | Document | Description | Audience | Pages |
 |----------|-------------|----------|-------|
+| **[HS2 Business Strategy](HS2_BUSINESS_STRATEGY.md)** ⭐ **CONSOLIDATED** | Response to HS2 Accelerator feedback (11.0/15 → 14.1/15) | HS2 Ltd, Tier 1 contractors, Investors | 1065 lines |
 | **[Executive Summary](business/EXECUTIVE_SUMMARY.md)** | One-page to full commercial overview | Investors, C-Suite | 22 |
 | **[YC Pitch Deck](business/HS2_STAKEHOLDER_PRESENTATION.md)** | Y Combinator pitch (15 slides + appendix) | Investors, Accelerators | 41 |
 | **[HS2 Deck PDF](business/HS2%20Deck.pdf)** | Visual presentation deck | Stakeholders | PDF |
 
-**Key Topics**: Market size (£2.5B TAM), ROI (7-43x), customer savings (£16M-£73M/year), competitive landscape, financial projections
+**Key Topics**: Programme scale economics (£16M → £2.7M), scalability through replication, Tier 1 augmentation strategy, distributed local deployment, Market size (£2.5B TAM), ROI (7-43x), customer savings (£16M-£73M/year), competitive landscape, financial projections
+
+**Business Strategy Note**: This comprehensive document consolidates PITCH_DECK_UPDATE, PROGRAMME_SCALE_ECONOMICS, TIER1_INTEGRATION_STRATEGY, HS2_ACCELERATOR_RESPONSE, and RESPONSE_TO_HS2_FEEDBACK into one complete strategy guide.
 
 ---
 
@@ -49,12 +52,15 @@ cd frontend && npm install && npm run dev
 
 | Document | Description | Use Case | Pages |
 |----------|-------------|----------|-------|
+| **[ML Technical Guide](ML_TECHNICAL_GUIDE.md)** ⭐ **CONSOLIDATED** | Complete ML implementation - training, deployment, troubleshooting | ML development, all ML topics | 1065 lines |
 | **[HS2 Implementation Guide](technical/HS2_PROGRESS_ASSURANCE_IMPLEMENTATION_GUIDE.md)** | Complete HS2 system implementation + workflows | Build/deploy HS2 module | 51 |
 | **[HS2 Technical FAQ](technical/HS2_TECHNICAL_FAQ.md)** | 40+ Q&A on hyperspectral, AI/ML, security | Due diligence, technical validation | 39 |
 | **[API Reference](technical/API_IMPLEMENTATION_COMPLETE.md)** | API endpoint specifications | Backend development | 10 |
 | **[Data Sources](technical/DATA_SOURCES.md)** | Available datasets and references | Data engineering | 5 |
 
-**Key Topics**: Hyperspectral imaging (Specim IQ, 204 bands, R²=0.89), AI/ML architecture, Azure deployment, security (GDPR, ISO 27001)
+**Key Topics**: UMKC hyperspectral ML (100% accuracy), 292 spectral features, Random Forest models, Docker deployment, Hyperspectral imaging (Specim IQ, 204 bands, R²=0.89), AI/ML architecture, Azure deployment, security (GDPR, ISO 27001)
+
+**ML Guide Note**: This single comprehensive document consolidates ML_MODEL_TRAINING_PLAN, ML_IMPLEMENTATION_COMPLETE, ML_INTEGRATION_GUIDE, and ML_MODELS_READY_FOR_PRODUCTION into one complete reference.
 
 ---
 

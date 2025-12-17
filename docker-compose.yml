@@ -47,6 +47,7 @@ services:
       - ./data/bim:/data/bim
       - ./data/lidar:/data/lidar
       - ./datasets:/datasets
+      - ./ml_artifacts:/app/ml_artifacts:ro  # ML models (read-only)
     environment:
       # Database
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}

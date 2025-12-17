@@ -1,0 +1,56 @@
+{
+  "model_version": "1.0",
+  "training_date": "2025-12-11T14:49:51.788451",
+  "target_accuracy": 0.89,
+  "cross_val_accuracy_mean": 1.0,
+  "cross_val_accuracy_std": 0.0,
+  "cross_val_accuracy_min": 1.0,
+  "cross_val_accuracy_max": 1.0,
+  "cross_val_scores": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "train_accuracy": 1.0,
+  "n_samples_original": 50,
+  "n_samples_augmented": 350,
+  "n_features": 292,
+  "model_type": "RandomForestClassifier",
+  "hyperparameters": {
+    "n_estimators": 500,
+    "max_depth": 20,
+    "min_samples_split": 5,
+    "min_samples_leaf": 2,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "dataset": {
+    "path": "/Users/nitishgautam/Code/prototype/ground-truth/datasets/raw/hyperspectral/umkc-material-surfaces",
+    "concrete_samples": 34,
+    "asphalt_samples": 16
+  },
+  "confusion_matrix": [
+    [
+      112,
+      0
+    ],
+    [
+      0,
+      238
+    ]
+  ],
+  "top_10_features": [
+    11,
+    14,
+    16,
+    12,
+    280,
+    291,
+    287,
+    286,
+    284,
+    285
+  ]
+}

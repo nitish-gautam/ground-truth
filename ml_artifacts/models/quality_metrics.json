@@ -1,0 +1,41 @@
+{
+  "model_version": "1.0",
+  "training_date": "2025-12-11T14:50:05.600208",
+  "pseudo_labels": true,
+  "pseudo_label_method": "physics_based_heuristics",
+  "n_samples": 34,
+  "n_features": 292,
+  "model_type": "RandomForestRegressor",
+  "hyperparameters": {
+    "n_estimators": 200,
+    "max_depth": 15,
+    "min_samples_split": 5,
+    "min_samples_leaf": 2,
+    "random_state": 42
+  },
+  "cross_validation": {
+    "quality_r2_mean": 1.0,
+    "quality_r2_std": 0.0,
+    "strength_r2_mean": 1.0,
+    "strength_r2_std": 0.0,
+    "confidence_r2_mean": 0.6530717295159488,
+    "confidence_r2_std": 0.1515920522639663
+  },
+  "training_performance": {
+    "quality": {
+      "mae": 0.0,
+      "rmse": 0.0,
+      "r2": 1.0
+    },
+    "strength": {
+      "mae": 0.0,
+      "rmse": 0.0,
+      "r2": 1.0
+    },
+    "confidence": {
+      "mae": 0.06179857932310702,
+      "rmse": 0.08726648310784654,
+      "r2": 0.9541068783201994
+    }
+  }
+}

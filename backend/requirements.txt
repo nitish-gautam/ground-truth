@@ -64,6 +64,9 @@ opencv-python==4.8.1.78
 # Hyperspectral Imaging
 spectral==0.23.1        # Hyperspectral image processing library
 scikit-image==0.22.0    # Image processing algorithms
+tifffile==2025.10.16    # Multi-page TIFF I/O with LZW compression support
+imagecodecs==2025.11.11 # Codecs for image compression (LZW, JPEG, etc.)
+joblib==1.3.2           # Model serialization and parallel computing
 
 # Geospatial Data Processing
 geopandas==0.14.1
