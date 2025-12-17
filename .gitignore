@@ -239,3 +239,17 @@ Thumbs.db
 *.tmp
 *.temp
 .cache/
+
+# ML Models (large binary files)
+# These are trained models that should not be committed to git
+# Store them in cloud storage or model registry instead
+*.pkl
+*.h5
+*.pt
+*.pth
+*.onnx
+ml_artifacts/models/*.pkl
+ml_artifacts/models/*.h5
+ml_artifacts/models/*.pt
+ml_artifacts/models/*.pth
+ml_artifacts/models/*.onnx
