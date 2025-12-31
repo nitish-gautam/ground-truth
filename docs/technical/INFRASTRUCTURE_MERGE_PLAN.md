@@ -219,7 +219,7 @@ curl http://localhost:8000/health  # {"status":"healthy"}
 5. Test large file uploads (simulate 1GB file)
 
 **Deliverables**:
-- [ ] MinIO accessible at http://localhost:9001
+- [ ] MinIO accessible at http://localhost:9011
 - [ ] 5 buckets created automatically
 - [ ] File upload API working: `POST /api/v1/files/upload`
 - [ ] Streaming download API: `GET /api/v1/files/download/{file_id}`

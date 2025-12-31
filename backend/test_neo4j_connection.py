@@ -87,7 +87,7 @@ async def test_neo4j_connection():
         print("=" * 60)
 
         print("\n💡 Next steps:")
-        print("   1. Access Neo4j Browser: http://localhost:7474")
+        print("   1. Access Neo4j Browser: http://localhost:7475")
         print("   2. Login: neo4j / hs2_graph_2024")
         print("   3. Run query: MATCH (n) RETURN n LIMIT 25")
         print("   4. Visualize the test nodes you just created!")

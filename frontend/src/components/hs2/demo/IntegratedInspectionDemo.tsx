@@ -145,26 +145,89 @@ const SAMPLE_SEGMENTS = [
   }
 ];
 
-const SAMPLE_ANALYSIS_RESULTS = {
-  geometric_analysis: {
-    flatness_mm: 3.2,
-    verticality_mm: 2.1,
-    as_built_deviation_mm: 4.5,
-    surface_roughness: 'Acceptable',
-    meets_tolerance: true
-  },
-  material_analysis: {
-    concrete_strength_mpa: 42.3,
-    moisture_content_pct: 3.8,
-    aggregate_quality: 'Good',
-    carbonation_depth_mm: 1.2,
-    chloride_content: 'Low'
-  },
-  visual_defects: [
-    { type: 'Crack', severity: 'Minor', location: [12.3, 5.6], length_mm: 45 },
-    { type: 'Spalling', severity: 'Moderate', location: [18.2, 8.1], area_sqcm: 12 },
-    { type: 'Discoloration', severity: 'Minor', location: [15.7, 12.3], area_sqcm: 28 }
-  ]
+// Generate unique analysis results for each segment based on segment properties
+const getAnalysisResultsForSegment = (segmentId: string) => {
+  const resultsMap: { [key: string]: any } = {
+    'Pier_P1_East_Face': {
+      geometric_analysis: {
+        flatness_mm: 3.2,
+        verticality_mm: 2.1,
+        as_built_deviation_mm: 4.5,
+        surface_roughness: 'Acceptable',
+        meets_tolerance: true
+      },
+      material_analysis: {
+        concrete_strength_mpa: 42.3,
+        moisture_content_pct: 3.8,
+        aggregate_quality: 'Good',
+        carbonation_depth_mm: 1.2,
+        chloride_content: 'Low'
+      },
+      visual_defects: [
+        { type: 'Crack', severity: 'Minor', location: [12.3, 5.6], length_mm: 45 },
+        { type: 'Spalling', severity: 'Moderate', location: [18.2, 8.1], area_sqcm: 12 },
+        { type: 'Discoloration', severity: 'Minor', location: [15.7, 12.3], area_sqcm: 28 }
+      ]
+    },
+    'Pier_P1_West_Face': {
+      geometric_analysis: {
+        flatness_mm: 2.8,
+        verticality_mm: 1.9,
+        as_built_deviation_mm: 3.2,
+        surface_roughness: 'Good',
+        meets_tolerance: true
+      },
+      material_analysis: {
+        concrete_strength_mpa: 44.1,
+        moisture_content_pct: 3.2,
+        aggregate_quality: 'Excellent',
+        carbonation_depth_mm: 0.9,
+        chloride_content: 'Low'
+      },
+      visual_defects: [
+        { type: 'Minor Surface Wear', severity: 'Minor', location: [8.5, 4.2], area_sqcm: 15 }
+      ]
+    },
+    'Pier_P1_North_Face': {
+      geometric_analysis: {
+        flatness_mm: 3.5,
+        verticality_mm: 2.3,
+        as_built_deviation_mm: 5.1,
+        surface_roughness: 'Acceptable',
+        meets_tolerance: true
+      },
+      material_analysis: {
+        concrete_strength_mpa: 41.8,
+        moisture_content_pct: 4.1,
+        aggregate_quality: 'Good',
+        carbonation_depth_mm: 1.5,
+        chloride_content: 'Low'
+      },
+      visual_defects: [
+        { type: 'Crack', severity: 'Minor', location: [5.2, 3.8], length_mm: 38 },
+        { type: 'Efflorescence', severity: 'Minor', location: [9.1, 7.4], area_sqcm: 22 }
+      ]
+    },
+    'Pier_P1_South_Face': {
+      geometric_analysis: {
+        flatness_mm: 2.5,
+        verticality_mm: 1.7,
+        as_built_deviation_mm: 2.9,
+        surface_roughness: 'Excellent',
+        meets_tolerance: true
+      },
+      material_analysis: {
+        concrete_strength_mpa: 45.2,
+        moisture_content_pct: 2.9,
+        aggregate_quality: 'Excellent',
+        carbonation_depth_mm: 0.8,
+        chloride_content: 'Very Low'
+      },
+      visual_defects: []
+    }
+  };
+
+  return resultsMap[segmentId] || resultsMap['Pier_P1_East_Face'];
 };
 
 export const IntegratedInspectionDemo: React.FC = () => {
@@ -439,9 +502,16 @@ export const IntegratedInspectionDemo: React.FC = () => {
 
             {selectedSegment ? (
               <Box>
-                <Typography variant="subtitle2" fontWeight={600} gutterBottom>
-                  Analysis Results: {selectedSegment}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    Analysis Results: {selectedSegment}
+                  </Typography>
+                  <Chip
+                    label="🟡 SYNTHETIC DATA (Demo)"
+                    size="small"
+                    sx={{ bgcolor: 'rgb(254, 249, 195)', color: 'rgb(113, 63, 18)', fontWeight: 600 }}
+                  />
+                </Box>
 
                 <Grid container spacing={2} mt={1}>
                   {/* Geometric Analysis */}
@@ -455,26 +525,26 @@ export const IntegratedInspectionDemo: React.FC = () => {
                         <Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">Flatness</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.geometric_analysis.flatness_mm} mm</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).geometric_analysis.flatness_mm} mm</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">Verticality</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.geometric_analysis.verticality_mm} mm</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).geometric_analysis.verticality_mm} mm</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">As-Built Deviation</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.geometric_analysis.as_built_deviation_mm} mm</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).geometric_analysis.as_built_deviation_mm} mm</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">Surface Roughness</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.geometric_analysis.surface_roughness}</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).geometric_analysis.surface_roughness}</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between">
                             <Typography variant="caption" color="text.secondary">Meets Tolerance</Typography>
                             <Chip
-                              label={SAMPLE_ANALYSIS_RESULTS.geometric_analysis.meets_tolerance ? 'Yes' : 'No'}
+                              label={getAnalysisResultsForSegment(selectedSegment).geometric_analysis.meets_tolerance ? 'Yes' : 'No'}
                               size="small"
-                              color={SAMPLE_ANALYSIS_RESULTS.geometric_analysis.meets_tolerance ? 'success' : 'error'}
+                              color={getAnalysisResultsForSegment(selectedSegment).geometric_analysis.meets_tolerance ? 'success' : 'error'}
                             />
                           </Box>
                         </Box>
@@ -493,23 +563,23 @@ export const IntegratedInspectionDemo: React.FC = () => {
                         <Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">Concrete Strength</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.material_analysis.concrete_strength_mpa} MPa</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).material_analysis.concrete_strength_mpa} MPa</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">Moisture Content</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.material_analysis.moisture_content_pct}%</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).material_analysis.moisture_content_pct}%</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">Aggregate Quality</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.material_analysis.aggregate_quality}</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).material_analysis.aggregate_quality}</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="caption" color="text.secondary">Carbonation Depth</Typography>
-                            <Typography variant="body2">{SAMPLE_ANALYSIS_RESULTS.material_analysis.carbonation_depth_mm} mm</Typography>
+                            <Typography variant="body2">{getAnalysisResultsForSegment(selectedSegment).material_analysis.carbonation_depth_mm} mm</Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between">
                             <Typography variant="caption" color="text.secondary">Chloride Content</Typography>
-                            <Chip label={SAMPLE_ANALYSIS_RESULTS.material_analysis.chloride_content} size="small" color="success" />
+                            <Chip label={getAnalysisResultsForSegment(selectedSegment).material_analysis.chloride_content} size="small" color="success" />
                           </Box>
                         </Box>
                       </CardContent>
@@ -524,24 +594,30 @@ export const IntegratedInspectionDemo: React.FC = () => {
                           Visual Defects
                         </Typography>
                         <Divider sx={{ my: 1 }} />
-                        {SAMPLE_ANALYSIS_RESULTS.visual_defects.map((defect, index) => (
-                          <Card key={index} variant="outlined" sx={{ mb: 1, p: 1 }}>
-                            <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
-                              <Typography variant="caption" fontWeight={600}>{defect.type}</Typography>
-                              <Chip
-                                label={defect.severity}
-                                size="small"
-                                color={defect.severity === 'Minor' ? 'success' : 'warning'}
-                              />
-                            </Box>
-                            <Typography variant="caption" color="text.secondary" display="block">
-                              Location: ({defect.location[0]}, {defect.location[1]})
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {defect.length_mm ? `Length: ${defect.length_mm}mm` : `Area: ${defect.area_sqcm}cm²`}
-                            </Typography>
-                          </Card>
-                        ))}
+                        {getAnalysisResultsForSegment(selectedSegment).visual_defects.length > 0 ? (
+                          getAnalysisResultsForSegment(selectedSegment).visual_defects.map((defect, index) => (
+                            <Card key={index} variant="outlined" sx={{ mb: 1, p: 1 }}>
+                              <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
+                                <Typography variant="caption" fontWeight={600}>{defect.type}</Typography>
+                                <Chip
+                                  label={defect.severity}
+                                  size="small"
+                                  color={defect.severity === 'Minor' ? 'success' : 'warning'}
+                                />
+                              </Box>
+                              <Typography variant="caption" color="text.secondary" display="block">
+                                Location: ({defect.location[0]}, {defect.location[1]})
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {defect.length_mm ? `Length: ${defect.length_mm}mm` : `Area: ${defect.area_sqcm}cm²`}
+                              </Typography>
+                            </Card>
+                          ))
+                        ) : (
+                          <Typography variant="body2" color="success.main" sx={{ fontStyle: 'italic' }}>
+                            No defects detected
+                          </Typography>
+                        )}
                       </CardContent>
                     </Card>
                   </Grid>

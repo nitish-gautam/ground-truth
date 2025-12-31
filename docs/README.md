@@ -4,7 +4,7 @@
 
 *Your central hub for navigating all project documentation. Everything organized by category for easy access.*
 
-Last Updated: December 10, 2025
+Last Updated: December 31, 2025
 
 ---
 
@@ -14,13 +14,15 @@ Last Updated: December 10, 2025
 1. 📖 **[Getting Started Guide](guides/GETTING_STARTED.md)** - Complete setup instructions (5-10 minutes)
 2. 🔑 **[Credentials Reference](CREDENTIALS.md)** - Database passwords, API keys, service credentials
 3. 🎮 **[HS2 Demo Quick Start](guides/HS2_DEMO_QUICKSTART.md)** - Run HS2 demo in 2 minutes
+4. 📋 **[CHANGELOG](../CHANGELOG.md)** - Latest fixes and improvements (Dec 2025)
 
 ### Quick Access
 ```bash
-# URLs
+# URLs (Updated December 2025)
 Frontend:      http://localhost:3003/hs2
-API Docs:      http://localhost:8002/docs
-MinIO Console: http://localhost:9001
+API Docs:      http://localhost:8007/docs
+MinIO Console: http://localhost:9011
+Neo4j Browser: http://localhost:7475
 
 # Start Everything
 docker compose up -d

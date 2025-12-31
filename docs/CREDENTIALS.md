@@ -19,10 +19,10 @@ Health:      http://localhost:8002/health
 |---------|-----|---------------|
 | HS2 Dashboard | http://localhost:3003/hs2 | ❌ No |
 | Backend API | http://localhost:8002 | ❌ No |
-| Neo4j Browser | http://localhost:7474 | ✅ Yes |
-| MinIO Console | http://localhost:9001 | ✅ Yes |
+| Neo4j Browser | http://localhost:7475 | ✅ Yes |
+| MinIO Console | http://localhost:9011 | ✅ Yes |
 | PostgreSQL | localhost:5433 | ✅ Yes |
-| Redis | localhost:6379 | ❌ No |
+| Redis | localhost:6380| ❌ No |
 
 ---
 
@@ -30,7 +30,7 @@ Health:      http://localhost:8002/health
 
 ### MinIO S3 Storage
 ```
-URL:         http://localhost:9001
+URL:         http://localhost:9011
 Username:    minioadmin
 Password:    mD9E3_kgZJAPRjNvBWOxGQ
 ```
@@ -58,8 +58,8 @@ Command:     redis-cli -h localhost -p 6379
 
 ### Neo4j Graph Database
 ```
-Browser URL: http://localhost:7474
-Bolt URI:    bolt://localhost:7687
+Browser URL: http://localhost:7475
+Bolt URI:    bolt://localhost:7688
 Username:    neo4j
 Password:    hs2_graph_2024
 

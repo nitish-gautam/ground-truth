@@ -4,7 +4,7 @@
  * 3-Column Layout: Inputs (Left) | Visualization (Center) | Analysis (Right)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Paper,
@@ -76,9 +76,11 @@ const ASSETS = [
   { id: 'pier_p3', label: 'Pier P3' }
 ];
 
-const SEGMENTS = [
+const ALL_SEGMENTS = [
+  // Pier P1 - Mixed quality (has some defects)
   {
     id: 'Pier_P1_East_Face',
+    pier: 'pier_p1',
     face: 'East Face',
     area_sqm: 45.2,
     lidar_points: 125000,
@@ -93,6 +95,7 @@ const SEGMENTS = [
   },
   {
     id: 'Pier_P1_West_Face',
+    pier: 'pier_p1',
     face: 'West Face',
     area_sqm: 45.2,
     lidar_points: 118000,
@@ -107,6 +110,7 @@ const SEGMENTS = [
   },
   {
     id: 'Pier_P1_North_Face',
+    pier: 'pier_p1',
     face: 'North Face',
     area_sqm: 22.5,
     lidar_points: 62000,
@@ -121,6 +125,7 @@ const SEGMENTS = [
   },
   {
     id: 'Pier_P1_South_Face',
+    pier: 'pier_p1',
     face: 'South Face',
     area_sqm: 22.5,
     lidar_points: 65000,
@@ -132,10 +137,135 @@ const SEGMENTS = [
     strength_mpa: 46.2,
     moisture_pct: 3.2,
     defects: 0
+  },
+
+  // Pier P2 - Better quality (fewer defects, better scores)
+  {
+    id: 'Pier_P2_East_Face',
+    pier: 'pier_p2',
+    face: 'East Face',
+    area_sqm: 45.2,
+    lidar_points: 130000,
+    hsi_coverage: 97,
+    images_360: 8,
+    quality_score: 92,
+    flatness_mm: 2.1,
+    verticality_mm: 1.5,
+    strength_mpa: 45.8,
+    moisture_pct: 3.1,
+    defects: 1
+  },
+  {
+    id: 'Pier_P2_West_Face',
+    pier: 'pier_p2',
+    face: 'West Face',
+    area_sqm: 45.2,
+    lidar_points: 128000,
+    hsi_coverage: 96,
+    images_360: 8,
+    quality_score: 95,
+    flatness_mm: 1.9,
+    verticality_mm: 1.3,
+    strength_mpa: 47.2,
+    moisture_pct: 2.9,
+    defects: 0
+  },
+  {
+    id: 'Pier_P2_North_Face',
+    pier: 'pier_p2',
+    face: 'North Face',
+    area_sqm: 22.5,
+    lidar_points: 68000,
+    hsi_coverage: 93,
+    images_360: 4,
+    quality_score: 90,
+    flatness_mm: 2.5,
+    verticality_mm: 1.8,
+    strength_mpa: 44.5,
+    moisture_pct: 3.3,
+    defects: 1
+  },
+  {
+    id: 'Pier_P2_South_Face',
+    pier: 'pier_p2',
+    face: 'South Face',
+    area_sqm: 22.5,
+    lidar_points: 70000,
+    hsi_coverage: 94,
+    images_360: 4,
+    quality_score: 97,
+    flatness_mm: 1.7,
+    verticality_mm: 1.2,
+    strength_mpa: 48.1,
+    moisture_pct: 2.8,
+    defects: 0
+  },
+
+  // Pier P3 - Poorest quality (more defects, lower scores)
+  {
+    id: 'Pier_P3_East_Face',
+    pier: 'pier_p3',
+    face: 'East Face',
+    area_sqm: 45.2,
+    lidar_points: 115000,
+    hsi_coverage: 89,
+    images_360: 7,
+    quality_score: 68,
+    flatness_mm: 4.3,
+    verticality_mm: 2.7,
+    strength_mpa: 38.9,
+    moisture_pct: 4.5,
+    defects: 4
+  },
+  {
+    id: 'Pier_P3_West_Face',
+    pier: 'pier_p3',
+    face: 'West Face',
+    area_sqm: 45.2,
+    lidar_points: 112000,
+    hsi_coverage: 87,
+    images_360: 7,
+    quality_score: 72,
+    flatness_mm: 3.9,
+    verticality_mm: 2.4,
+    strength_mpa: 40.2,
+    moisture_pct: 4.1,
+    defects: 2
+  },
+  {
+    id: 'Pier_P3_North_Face',
+    pier: 'pier_p3',
+    face: 'North Face',
+    area_sqm: 22.5,
+    lidar_points: 58000,
+    hsi_coverage: 85,
+    images_360: 4,
+    quality_score: 75,
+    flatness_mm: 4.5,
+    verticality_mm: 2.8,
+    strength_mpa: 37.5,
+    moisture_pct: 4.7,
+    defects: 3
+  },
+  {
+    id: 'Pier_P3_South_Face',
+    pier: 'pier_p3',
+    face: 'South Face',
+    area_sqm: 22.5,
+    lidar_points: 60000,
+    hsi_coverage: 86,
+    images_360: 4,
+    quality_score: 80,
+    flatness_mm: 3.5,
+    verticality_mm: 2.2,
+    strength_mpa: 41.3,
+    moisture_pct: 3.9,
+    defects: 2
   }
 ];
 
-const DEFECTS = [
+const ALL_DEFECTS = [
+  // Pier P1 defects (6 total)
   {
     id: 1,
     type: 'Crack',
@@ -159,6 +289,138 @@ const DEFECTS = [
     location: [15.7, 12.3],
     area_sqcm: 28,
     segment: 'Pier_P1_East_Face'
+  },
+  {
+    id: 4,
+    type: 'Crack',
+    severity: 'Minor',
+    location: [8.5, 6.2],
+    length_mm: 32,
+    segment: 'Pier_P1_West_Face'
+  },
+  {
+    id: 5,
+    type: 'Spalling',
+    severity: 'Minor',
+    location: [5.3, 4.1],
+    area_sqcm: 8,
+    segment: 'Pier_P1_North_Face'
+  },
+  {
+    id: 6,
+    type: 'Crack',
+    severity: 'Minor',
+    location: [10.2, 7.8],
+    length_mm: 28,
+    segment: 'Pier_P1_North_Face'
+  },
+
+  // Pier P2 defects (2 total - better quality)
+  {
+    id: 7,
+    type: 'Minor Surface Wear',
+    severity: 'Minor',
+    location: [14.5, 6.8],
+    area_sqcm: 5,
+    segment: 'Pier_P2_East_Face'
+  },
+  {
+    id: 8,
+    type: 'Discoloration',
+    severity: 'Minor',
+    location: [7.2, 9.3],
+    area_sqcm: 15,
+    segment: 'Pier_P2_North_Face'
+  },
+
+  // Pier P3 defects (11 total - poorest quality)
+  {
+    id: 9,
+    type: 'Crack',
+    severity: 'Moderate',
+    location: [11.5, 7.2],
+    length_mm: 68,
+    segment: 'Pier_P3_East_Face'
+  },
+  {
+    id: 10,
+    type: 'Spalling',
+    severity: 'Moderate',
+    location: [16.8, 9.4],
+    area_sqcm: 18,
+    segment: 'Pier_P3_East_Face'
+  },
+  {
+    id: 11,
+    type: 'Discoloration',
+    severity: 'Minor',
+    location: [19.3, 11.2],
+    area_sqcm: 32,
+    segment: 'Pier_P3_East_Face'
+  },
+  {
+    id: 12,
+    type: 'Crack',
+    severity: 'Minor',
+    location: [6.8, 4.5],
+    length_mm: 42,
+    segment: 'Pier_P3_East_Face'
+  },
+  {
+    id: 13,
+    type: 'Crack',
+    severity: 'Moderate',
+    location: [9.7, 8.1],
+    length_mm: 55,
+    segment: 'Pier_P3_West_Face'
+  },
+  {
+    id: 14,
+    type: 'Spalling',
+    severity: 'Minor',
+    location: [13.2, 6.3],
+    area_sqcm: 10,
+    segment: 'Pier_P3_West_Face'
+  },
+  {
+    id: 15,
+    type: 'Crack',
+    severity: 'Minor',
+    location: [4.2, 3.8],
+    length_mm: 38,
+    segment: 'Pier_P3_North_Face'
+  },
+  {
+    id: 16,
+    type: 'Spalling',
+    severity: 'Moderate',
+    location: [7.5, 5.9],
+    area_sqcm: 14,
+    segment: 'Pier_P3_North_Face'
+  },
+  {
+    id: 17,
+    type: 'Discoloration',
+    severity: 'Minor',
+    location: [11.8, 8.7],
+    area_sqcm: 22,
+    segment: 'Pier_P3_North_Face'
+  },
+  {
+    id: 18,
+    type: 'Crack',
+    severity: 'Minor',
+    location: [8.3, 6.1],
+    length_mm: 35,
+    segment: 'Pier_P3_South_Face'
+  },
+  {
+    id: 19,
+    type: 'Spalling',
+    severity: 'Minor',
+    location: [12.1, 9.2],
+    area_sqcm: 9,
+    segment: 'Pier_P3_South_Face'
   }
 ];
 
@@ -174,6 +436,22 @@ export const DashboardIntegratedDemo: React.FC = () => {
   const [viewMode, setViewMode] = useState('3d');
   const [analysisTab, setAnalysisTab] = useState(0);
   const [overlays, setOverlays] = useState<string[]>(['lidar']);
+
+  // Filter segments and defects based on selected asset
+  const SEGMENTS = ALL_SEGMENTS.filter(s => s.pier === selectedAsset);
+  const DEFECTS = ALL_DEFECTS.filter(d => {
+    // Extract pier ID from segment name (e.g., 'Pier_P1_East_Face' -> 'pier_p1')
+    const segmentPier = d.segment.split('_').slice(0, 2).join('_').toLowerCase();
+    return segmentPier === selectedAsset;
+  });
+
+  // Reset selected segments when asset changes
+  useEffect(() => {
+    const currentPierSegments = ALL_SEGMENTS.filter(s => s.pier === selectedAsset);
+    if (currentPierSegments.length > 0) {
+      setSelectedSegments([currentPierSegments[0].id]);
+    }
+  }, [selectedAsset]);
 
   const toggleSegment = (segmentId: string) => {
     setSelectedSegments(prev =>

@@ -17,7 +17,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Model paths (relative to project root)
-MODEL_PATH = Path(__file__).parent.parent.parent.parent.parent / "ml_artifacts" / "models"
+# Path structure: /app/app/ml/inference/predictor.py -> /app/ml_artifacts/models
+MODEL_PATH = Path(__file__).parent.parent.parent.parent / "ml_artifacts" / "models"
 
 
 class HyperspectralPredictor:

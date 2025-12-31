@@ -98,7 +98,7 @@ export const HyperspectralViewerTab: React.FC = () => {
                   Moisture content detection (critical for curing)
                 </Typography>
                 <Typography component="li" variant="body2" color="text.secondary">
-                  Defect identification (cracks, voids, delamination)
+                  Defect identification (cracks, voids, delamination) - Phase 2
                 </Typography>
                 <Typography component="li" variant="body2" color="text.secondary">
                   Aggregate quality assessment

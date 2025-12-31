@@ -183,7 +183,7 @@ async def get_layer_geojson(
         raise HTTPException(status_code=404, detail=f"Layer '{layer_id}' not found")
 
     try:
-        # Read shapefile using pyogrio engine
+        # Read shapefile using pyogrio (upgraded to 0.12+ for numpy 2.x compatibility)
         gdf = gpd.read_file(shapefile_path, engine='pyogrio')
 
         # Ensure WGS84 projection for web maps

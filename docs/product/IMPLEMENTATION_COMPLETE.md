@@ -176,7 +176,7 @@ open http://localhost:3003/hs2
 ### Services Running
 - **Frontend**: http://localhost:3003/hs2
 - **Backend API**: http://localhost:8002/docs
-- **MinIO Console**: http://localhost:9001
+- **MinIO Console**: http://localhost:9011
 - **PostgreSQL**: localhost:5433
 - **Redis**: localhost:6379
 

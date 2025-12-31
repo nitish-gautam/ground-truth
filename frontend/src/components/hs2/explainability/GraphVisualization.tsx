@@ -125,7 +125,7 @@ export const GraphVisualization: React.FC = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const response = await axios.get('http://localhost:8002/api/v1/hs2/assets');
+        const response = await axios.get('http://localhost:8007/api/v1/hs2/assets');
         // Handle paginated response structure: { total, skip, limit, items }
         const items = response.data.items || response.data;
         const assets = (Array.isArray(items) ? items : []).slice(0, 50).map((a: any) => a.asset_id);
@@ -151,13 +151,13 @@ export const GraphVisualization: React.FC = () => {
       try {
         // Fetch visualization data
         const vizResponse = await axios.get(
-          `http://localhost:8002/api/v1/graph/visualization/${assetId}?depth=${depth}`
+          `http://localhost:8007/api/v1/graph/visualization/${assetId}?depth=${depth}`
         );
         setGraphData(vizResponse.data);
 
         // Fetch explainability data
         const explainResponse = await axios.get(
-          `http://localhost:8002/api/v1/graph/explainability/${assetId}`
+          `http://localhost:8007/api/v1/graph/explainability/${assetId}`
         );
         setExplainability(explainResponse.data);
 
@@ -404,8 +404,8 @@ export const GraphVisualization: React.FC = () => {
       .attr('fill', d => STATUS_COLORS[d.status as keyof typeof STATUS_COLORS] || STATUS_COLORS.default)
       .text(d => d.status);
 
-    // Add TAEM score badges for assets
-    node.filter(d => d.taem_score !== undefined)
+    // Add TAEM score badges for assets (only for nodes with numeric scores)
+    node.filter(d => d.taem_score != null && typeof d.taem_score === 'number')
       .append('text')
       .attr('dy', 40)
       .attr('text-anchor', 'middle')
@@ -417,7 +417,7 @@ export const GraphVisualization: React.FC = () => {
         if (score >= 70) return '#FF8500';
         return '#E31E24';
       })
-      .text(d => `${d.taem_score?.toFixed(1)}%`);
+      .text(d => `${d.taem_score!.toFixed(1)}%`);
 
     // Update positions on simulation tick
     simulation.on('tick', () => {

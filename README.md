@@ -133,7 +133,7 @@ docker compose ps
 | **Frontend UI** | http://localhost:3003 | React web application |
 | **Backend API** | http://localhost:8002 | FastAPI REST API |
 | **API Docs** | http://localhost:8002/docs | Interactive Swagger UI |
-| **MinIO Console** | http://localhost:9001 | S3-compatible storage UI |
+| **MinIO Console** | http://localhost:9011 | S3-compatible storage UI |
 
 **Default MinIO Credentials**: `minioadmin` / `minioadmin` (see `.env` for custom values)
 

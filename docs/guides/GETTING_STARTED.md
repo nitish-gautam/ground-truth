@@ -56,7 +56,7 @@ infrastructure-minio      Up (healthy)
 | **Frontend UI** | http://localhost:3003 | N/A |
 | **Backend API** | http://localhost:8002 | N/A |
 | **API Docs** | http://localhost:8002/docs | N/A |
-| **MinIO Console** | http://localhost:9001 | minioadmin / minioadmin |
+| **MinIO Console** | http://localhost:9011 | minioadmin / minioadmin |
 
 ### 4. Verify Installation
 
@@ -565,7 +565,7 @@ docker compose exec postgres pg_isready -U gpr_user
 docker compose exec redis redis-cli ping
 
 # MinIO
-curl http://localhost:9000/minio/health/live
+curl http://localhost:9010/minio/health/live
 ```
 
 ---

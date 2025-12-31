@@ -1,7 +1,19 @@
 /**
- * HS2 Real Data Dashboard
- * Uses actual backend APIs for LiDAR, HSI, and BIM data
- * No hardcoded values - everything is dynamic
+ * HS2 Synthetic Data Dashboard
+ * 🟡 SYNTHETIC DATA - Algorithmically generated for demonstration
+ *
+ * This dashboard uses hardcoded synthetic data to demonstrate:
+ * - Multi-pier comparison (3 piers with varying quality)
+ * - Multi-segment analysis (4 faces per pier)
+ * - Defect detection visualization
+ * - Quality scoring calculations
+ *
+ * Data characteristics:
+ * - Pier P1: Mixed quality (6 defects, avg ~86 score)
+ * - Pier P2: Best quality (2 defects, avg ~94 score)
+ * - Pier P3: Poor quality (11 defects, avg ~74 score)
+ *
+ * Note: This is NOT real data from backend APIs or ML models
  */
 
 import React, { useState, useEffect } from 'react';
@@ -65,6 +77,7 @@ import {
 // Real segment data structure
 interface Segment {
   id: string;
+  pier: string;
   face: string;
   lidar_points: number;
   hsi_coverage: number;
@@ -75,10 +88,12 @@ interface Segment {
   defects: number;
 }
 
-// Real data from backend
-const REAL_SEGMENTS: Segment[] = [
+// Real data from backend - All piers
+const ALL_REAL_SEGMENTS: Segment[] = [
+  // Pier P1 - Mixed quality
   {
-    id: 'east',
+    id: 'p1_east',
+    pier: 'pier_p1',
     face: 'East Face',
     lidar_points: 125000,
     hsi_coverage: 95,
@@ -89,7 +104,8 @@ const REAL_SEGMENTS: Segment[] = [
     defects: 3
   },
   {
-    id: 'west',
+    id: 'p1_west',
+    pier: 'pier_p1',
     face: 'West Face',
     lidar_points: 118000,
     hsi_coverage: 92,
@@ -100,7 +116,8 @@ const REAL_SEGMENTS: Segment[] = [
     defects: 1
   },
   {
-    id: 'north',
+    id: 'p1_north',
+    pier: 'pier_p1',
     face: 'North Face',
     lidar_points: 62000,
     hsi_coverage: 88,
@@ -111,7 +128,8 @@ const REAL_SEGMENTS: Segment[] = [
     defects: 2
   },
   {
-    id: 'south',
+    id: 'p1_south',
+    pier: 'pier_p1',
     face: 'South Face',
     lidar_points: 65000,
     hsi_coverage: 90,
@@ -120,14 +138,115 @@ const REAL_SEGMENTS: Segment[] = [
     strength_mpa: 46.2,
     moisture_pct: 3.2,
     defects: 0
+  },
+
+  // Pier P2 - Better quality
+  {
+    id: 'p2_east',
+    pier: 'pier_p2',
+    face: 'East Face',
+    lidar_points: 130000,
+    hsi_coverage: 97,
+    flatness_mm: 2.1,
+    verticality_mm: 1.5,
+    strength_mpa: 45.8,
+    moisture_pct: 3.1,
+    defects: 1
+  },
+  {
+    id: 'p2_west',
+    pier: 'pier_p2',
+    face: 'West Face',
+    lidar_points: 128000,
+    hsi_coverage: 96,
+    flatness_mm: 1.9,
+    verticality_mm: 1.3,
+    strength_mpa: 47.2,
+    moisture_pct: 2.9,
+    defects: 0
+  },
+  {
+    id: 'p2_north',
+    pier: 'pier_p2',
+    face: 'North Face',
+    lidar_points: 68000,
+    hsi_coverage: 93,
+    flatness_mm: 2.5,
+    verticality_mm: 1.8,
+    strength_mpa: 44.5,
+    moisture_pct: 3.3,
+    defects: 1
+  },
+  {
+    id: 'p2_south',
+    pier: 'pier_p2',
+    face: 'South Face',
+    lidar_points: 70000,
+    hsi_coverage: 94,
+    flatness_mm: 1.7,
+    verticality_mm: 1.2,
+    strength_mpa: 48.1,
+    moisture_pct: 2.8,
+    defects: 0
+  },
+
+  // Pier P3 - Poorest quality
+  {
+    id: 'p3_east',
+    pier: 'pier_p3',
+    face: 'East Face',
+    lidar_points: 115000,
+    hsi_coverage: 89,
+    flatness_mm: 4.3,
+    verticality_mm: 2.7,
+    strength_mpa: 38.9,
+    moisture_pct: 4.5,
+    defects: 4
+  },
+  {
+    id: 'p3_west',
+    pier: 'pier_p3',
+    face: 'West Face',
+    lidar_points: 112000,
+    hsi_coverage: 87,
+    flatness_mm: 3.9,
+    verticality_mm: 2.4,
+    strength_mpa: 40.2,
+    moisture_pct: 4.1,
+    defects: 2
+  },
+  {
+    id: 'p3_north',
+    pier: 'pier_p3',
+    face: 'North Face',
+    lidar_points: 58000,
+    hsi_coverage: 85,
+    flatness_mm: 4.5,
+    verticality_mm: 2.8,
+    strength_mpa: 37.5,
+    moisture_pct: 4.7,
+    defects: 3
+  },
+  {
+    id: 'p3_south',
+    pier: 'pier_p3',
+    face: 'South Face',
+    lidar_points: 60000,
+    hsi_coverage: 86,
+    flatness_mm: 3.5,
+    verticality_mm: 2.2,
+    strength_mpa: 41.3,
+    moisture_pct: 3.9,
+    defects: 2
   }
 ];
 
-// Real defects data
-const REAL_DEFECTS = [
+// Real defects data - All piers
+const ALL_REAL_DEFECTS = [
+  // Pier P1 defects (6 total)
   {
     id: 1,
-    segment: 'east',
+    segment: 'p1_east',
     type: 'Spalling',
     severity: 'Moderate',
     location: [18.2, 8.1],
@@ -138,7 +257,7 @@ const REAL_DEFECTS = [
   },
   {
     id: 2,
-    segment: 'east',
+    segment: 'p1_east',
     type: 'Crack',
     severity: 'Minor',
     location: [12.3, 5.6],
@@ -149,7 +268,7 @@ const REAL_DEFECTS = [
   },
   {
     id: 3,
-    segment: 'east',
+    segment: 'p1_east',
     type: 'Discoloration',
     severity: 'Minor',
     location: [15.7, 12.3],
@@ -160,7 +279,7 @@ const REAL_DEFECTS = [
   },
   {
     id: 4,
-    segment: 'west',
+    segment: 'p1_west',
     type: 'Crack',
     severity: 'Minor',
     location: [8.5, 6.2],
@@ -171,7 +290,7 @@ const REAL_DEFECTS = [
   },
   {
     id: 5,
-    segment: 'north',
+    segment: 'p1_north',
     type: 'Spalling',
     severity: 'Minor',
     location: [5.3, 4.1],
@@ -182,7 +301,7 @@ const REAL_DEFECTS = [
   },
   {
     id: 6,
-    segment: 'north',
+    segment: 'p1_north',
     type: 'Crack',
     severity: 'Minor',
     location: [10.2, 7.8],
@@ -190,6 +309,153 @@ const REAL_DEFECTS = [
     x: 10.2,
     y: 7.8,
     z: 28
+  },
+
+  // Pier P2 defects (2 total - better quality)
+  {
+    id: 7,
+    segment: 'p2_east',
+    type: 'Minor Surface Wear',
+    severity: 'Minor',
+    location: [14.5, 6.8],
+    area_sqcm: 5,
+    x: 14.5,
+    y: 6.8,
+    z: 5
+  },
+  {
+    id: 8,
+    segment: 'p2_north',
+    type: 'Discoloration',
+    severity: 'Minor',
+    location: [7.2, 9.3],
+    area_sqcm: 15,
+    x: 7.2,
+    y: 9.3,
+    z: 15
+  },
+
+  // Pier P3 defects (11 total - poorest quality)
+  {
+    id: 9,
+    segment: 'p3_east',
+    type: 'Crack',
+    severity: 'Moderate',
+    location: [11.5, 7.2],
+    length_mm: 68,
+    x: 11.5,
+    y: 7.2,
+    z: 68
+  },
+  {
+    id: 10,
+    segment: 'p3_east',
+    type: 'Spalling',
+    severity: 'Moderate',
+    location: [16.8, 9.4],
+    area_sqcm: 18,
+    x: 16.8,
+    y: 9.4,
+    z: 18
+  },
+  {
+    id: 11,
+    segment: 'p3_east',
+    type: 'Discoloration',
+    severity: 'Minor',
+    location: [19.3, 11.2],
+    area_sqcm: 32,
+    x: 19.3,
+    y: 11.2,
+    z: 32
+  },
+  {
+    id: 12,
+    segment: 'p3_east',
+    type: 'Crack',
+    severity: 'Minor',
+    location: [6.8, 4.5],
+    length_mm: 42,
+    x: 6.8,
+    y: 4.5,
+    z: 42
+  },
+  {
+    id: 13,
+    segment: 'p3_west',
+    type: 'Crack',
+    severity: 'Moderate',
+    location: [9.7, 8.1],
+    length_mm: 55,
+    x: 9.7,
+    y: 8.1,
+    z: 55
+  },
+  {
+    id: 14,
+    segment: 'p3_west',
+    type: 'Spalling',
+    severity: 'Minor',
+    location: [13.2, 6.3],
+    area_sqcm: 10,
+    x: 13.2,
+    y: 6.3,
+    z: 10
+  },
+  {
+    id: 15,
+    segment: 'p3_north',
+    type: 'Crack',
+    severity: 'Minor',
+    location: [4.2, 3.8],
+    length_mm: 38,
+    x: 4.2,
+    y: 3.8,
+    z: 38
+  },
+  {
+    id: 16,
+    segment: 'p3_north',
+    type: 'Spalling',
+    severity: 'Moderate',
+    location: [7.5, 5.9],
+    area_sqcm: 14,
+    x: 7.5,
+    y: 5.9,
+    z: 14
+  },
+  {
+    id: 17,
+    segment: 'p3_north',
+    type: 'Discoloration',
+    severity: 'Minor',
+    location: [11.8, 8.7],
+    area_sqcm: 22,
+    x: 11.8,
+    y: 8.7,
+    z: 22
+  },
+  {
+    id: 18,
+    segment: 'p3_south',
+    type: 'Crack',
+    severity: 'Minor',
+    location: [8.3, 6.1],
+    length_mm: 35,
+    x: 8.3,
+    y: 6.1,
+    z: 35
+  },
+  {
+    id: 19,
+    segment: 'p3_south',
+    type: 'Spalling',
+    severity: 'Minor',
+    location: [12.1, 9.2],
+    area_sqcm: 9,
+    x: 12.1,
+    y: 9.2,
+    z: 9
   }
 ];
 
@@ -211,10 +477,26 @@ const calculateQualityScore = (segment: Segment): number => {
   return Math.round(geometricScore + materialScore + visualScore);
 };
 
-export const RealDataDashboard: React.FC = () => {
-  const [selectedSegments, setSelectedSegments] = useState<string[]>(['east', 'west', 'north', 'south']);
+export const SyntheticDataDashboard: React.FC = () => {
+  const [selectedPier, setSelectedPier] = useState<string>('pier_p1');
+  const [selectedSegments, setSelectedSegments] = useState<string[]>(['p1_east', 'p1_west', 'p1_north', 'p1_south']);
   const [viewMode, setViewMode] = useState('defects');
   const [loading, setLoading] = useState(false);
+
+  // Filter segments and defects based on selected pier
+  const REAL_SEGMENTS = ALL_REAL_SEGMENTS.filter(s => s.pier === selectedPier);
+  const REAL_DEFECTS = ALL_REAL_DEFECTS.filter(d => {
+    const segment = ALL_REAL_SEGMENTS.find(s => s.id === d.segment);
+    return segment?.pier === selectedPier;
+  });
+
+  // Reset selected segments when pier changes
+  useEffect(() => {
+    const currentPierSegments = ALL_REAL_SEGMENTS.filter(s => s.pier === selectedPier);
+    if (currentPierSegments.length > 0) {
+      setSelectedSegments(currentPierSegments.map(s => s.id));
+    }
+  }, [selectedPier]);
 
   const toggleSegment = (segmentId: string) => {
     setSelectedSegments(prev =>
@@ -283,11 +565,27 @@ export const RealDataDashboard: React.FC = () => {
         boxShadow: '0 1px 3px rgba(0,0,0,0.08)'
       }}>
         <Box display="flex" alignItems="center" gap={2}>
-          <Select value="pier_p1" size="small" sx={{ minWidth: 120 }}>
+          <Select
+            value={selectedPier}
+            onChange={(e) => setSelectedPier(e.target.value)}
+            size="small"
+            sx={{ minWidth: 120 }}
+          >
             <MenuItem value="pier_p1">Pier P1</MenuItem>
             <MenuItem value="pier_p2">Pier P2</MenuItem>
             <MenuItem value="pier_p3">Pier P3</MenuItem>
           </Select>
+
+          <Chip
+            label="🟡 SYNTHETIC DATA (Demo)"
+            size="small"
+            sx={{
+              bgcolor: 'rgb(254, 249, 195)',
+              color: 'rgb(113, 63, 18)',
+              fontWeight: 600,
+              border: '1px solid rgb(217, 186, 102)'
+            }}
+          />
 
           <Chip
             icon={<Terrain fontSize="small" />}
@@ -891,4 +1189,4 @@ export const RealDataDashboard: React.FC = () => {
   );
 };
 
-export default RealDataDashboard;
+export default SyntheticDataDashboard;

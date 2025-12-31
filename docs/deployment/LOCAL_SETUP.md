@@ -79,7 +79,7 @@ docker compose exec backend python -m app.scripts.load_sample_data
 # 7. Access the application
 # Frontend: http://localhost:3000
 # Backend API: http://localhost:8000/docs
-# MinIO Console: http://localhost:9001
+# MinIO Console: http://localhost:9011
 # Flower (Celery): http://localhost:5555
 ```
 
@@ -243,8 +243,8 @@ docker compose exec backend python -m app.scripts.load_sample_data
 | **frontend** | 3000 | React web app | http://localhost:3000 |
 | **backend** | 8000 | FastAPI server | http://localhost:8000/docs |
 | **postgres** | 5432 | Database | postgresql://localhost:5432/gpr_db |
-| **minio** | 9000, 9001 | Object storage | http://localhost:9001 (console) |
-| **redis** | 6379 | Cache + broker | redis://localhost:6379 |
+| **minio** | 9000, 9001 | Object storage | http://localhost:9011 (console) |
+| **redis** | 6379 | Cache + broker | redis://localhost:6380 |
 | **celery_worker** | - | Background tasks | (monitored via Flower) |
 | **flower** | 5555 | Celery monitoring | http://localhost:5555 |
 | **tileserver** | 8080 | Map tiles | http://localhost:8080 |
@@ -320,7 +320,7 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 # ============================================
 VITE_API_URL=http://localhost:8000
 VITE_TILE_SERVER_URL=http://localhost:8080
-VITE_MINIO_ENDPOINT=http://localhost:9000
+VITE_MINIO_ENDPOINT=http://localhost:9010
 
 # ============================================
 # LLM CONFIGURATION (OPTIONAL - PHASE 2)
@@ -370,7 +370,7 @@ start http://localhost:3000  # Windows
 
 ```bash
 # Open MinIO console
-open http://localhost:9001
+open http://localhost:9011
 
 # Login with:
 # Username: minioadmin (or your MINIO_ROOT_USER)

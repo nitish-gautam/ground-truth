@@ -351,7 +351,7 @@ echo ""
 echo -e "${BLUE}Step 3: Configuring MinIO connection...${NC}"
 
 # Configure mc to connect to local MinIO
-mc alias set local http://localhost:9000 minioadmin mD9E3_kgZJAPRjNvBWOxGQ 2>/dev/null || true
+mc alias set local http://localhost:9010 minioadmin mD9E3_kgZJAPRjNvBWOxGQ 2>/dev/null || true
 
 # Verify connection
 if mc ls local > /dev/null 2>&1; then
@@ -425,7 +425,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 echo -e "${GREEN}✓ Upload complete!${NC}"
 echo ""
-echo "Access MinIO Console: http://localhost:9001"
+echo "Access MinIO Console: http://localhost:9011"
 echo "Username: minioadmin"
 echo "Password: mD9E3_kgZJAPRjNvBWOxGQ"
 echo ""

@@ -205,7 +205,7 @@ OPENAI_API_KEY=sk-...
 PINECONE_API_KEY=...
 PINECONE_ENVIRONMENT=us-west1-gcp
 DATABASE_URL=postgresql://user:pass@host:5432/db
-REDIS_URL=redis://localhost:6379
+REDIS_URL=redis://localhost:6380
 AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 ```
@@ -380,6 +380,12 @@ This project has access to specialized Claude Code agents for domain-specific ta
 - **Specialties**: React 18, TypeScript, PWA development, mobile-first design
 - **Use Cases**: UI components, PWA implementation, mobile field application development
 - **Config**: `.claude/frontend-react-expert-config.md`
+
+#### @ux-strategist
+- **Purpose**: User experience strategy and design specialist
+- **Specialties**: User journey mapping, visual design, color psychology, emotional design
+- **Use Cases**: UX evaluation, user flow optimization, visual hierarchy, mobile experience
+- **Config**: `.claude/agents/ux-strategist.md`
 
 ### Agent Usage Examples
 
@@ -603,6 +609,24 @@ This project includes a comprehensive slash command system for specialized AI ag
 /design-review Assess 3D viewer performance impact
 ```
 
+#### `/ux` - UX Strategy & Experience Design
+**Agent**: ux-strategist
+**Use Cases:**
+- User journey mapping and flow analysis
+- Visual design and theme coherence evaluation
+- Cognitive load and usability assessment
+- Color psychology and emotional design
+- Mobile-first experience validation
+- Conversion optimization recommendations
+
+**Example Usage:**
+```
+/ux Analyze overall user experience and identify friction points
+/ux --journey Map user flow from landing to first value
+/ux --theme Evaluate color scheme and visual consistency
+/ux --mobile Review mobile experience and touch interactions
+```
+
 #### `/django` - Django REST Expert
 **Agent**: backend-django-expert
 **Use Cases:**
@@ -638,20 +662,26 @@ All slash commands are configured in:
 # Step 3: Implement backend API
 /fastapi Create endpoints for BIM file upload and processing
 
-# Step 4: Build frontend components
+# Step 4: UX strategy and design
+/ux Design user journey for BIM upload and visualization workflow
+
+# Step 5: Build frontend components
 /frontend Develop 3D BIM viewer with IFC.js integration
 
-# Step 5: Set up infrastructure
+# Step 6: Set up infrastructure
 /devops Configure Docker Compose for local BIM processing stack
 
-# Step 6: Security review
+# Step 7: Security review
 /security Review BIM file upload security and access controls
 
-# Step 7: Testing
+# Step 8: Testing
 /qa Create integration tests for BIM processing pipeline
 
-# Step 8: Code review
+# Step 9: Code review
 /review Analyze all new code for quality and best practices
+
+# Step 10: Design review
+/design-review Validate UI accessibility and responsive behavior
 ```
 
 ### Agent Prompt Customization
@@ -662,14 +692,15 @@ To customize agent behavior for this project, edit the agent configuration files
 .claude/agents/
 ├── master-orchestrator.md          # Orchestration logic
 ├── backend-fastapi-expert.md       # FastAPI patterns
+├── backend-django-expert.md        # Django patterns
 ├── database-designer.md            # Database design principles
 ├── frontend-react-expert.md        # React component guidelines
 ├── devops-engineer.md              # Infrastructure standards
 ├── security-architect.md           # Security requirements
 ├── qa-automation-expert.md         # Testing strategies
 ├── code-reviewer.md                # Code quality criteria
-├── design-reviewer.md              # UI/UX guidelines
-└── backend-django-expert.md        # Django patterns
+├── design-reviewer.md              # Technical design & accessibility
+└── ux-strategist.md                # UX strategy & journey mapping
 ```
 
 ### Benefits of Multi-Agent System

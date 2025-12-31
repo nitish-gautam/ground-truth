@@ -14,9 +14,9 @@ services:
       - ./frontend:/app
       - /app/node_modules  # Prevent overwriting node_modules
     environment:
-      - VITE_API_URL=http://localhost:8002
-      - VITE_TILE_SERVER_URL=http://localhost:8080
-      - VITE_MINIO_ENDPOINT=http://localhost:9000
+      - VITE_API_URL=http://localhost:8007
+      - VITE_TILE_SERVER_URL=http://localhost:8081
+      - VITE_MINIO_ENDPOINT=http://localhost:9010
     depends_on:
       - backend
       - tileserver
@@ -40,7 +40,7 @@ services:
       target: development
     container_name: infrastructure-backend
     ports:
-      - "8002:8000"
+      - "8007:8000"  # (host:container)
     volumes:
       - ./backend:/app
       - ./data/gpr:/data/gpr
@@ -81,7 +81,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=${DEBUG:-true}
       - ALLOWED_HOSTS=localhost,127.0.0.1,backend,infrastructure-backend
-      - CORS_ORIGINS=http://localhost:3003,http://localhost:8002
+      - CORS_ORIGINS=http://localhost:3003,http://localhost:8007
 
       # Optional: LLM APIs (Phase 2)
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
@@ -149,8 +149,8 @@ services:
     image: minio/minio:latest
     container_name: infrastructure-minio
     ports:
-      - "9000:9000"  # API
-      - "9001:9001"  # Console
+      - "9010:9000"  # API (host:container)
+      - "9011:9001"  # Console (host:container)
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
@@ -201,7 +201,7 @@ services:
     image: redis:7-alpine
     container_name: infrastructure-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"  # (host:container)
     volumes:
       - redis_data:/data
     networks:
@@ -221,8 +221,8 @@ services:
     image: neo4j:5.14-community
     container_name: hs2-neo4j
     ports:
-      - "7474:7474"  # HTTP Browser UI
-      - "7687:7687"  # Bolt protocol
+      - "7475:7474"  # HTTP Browser UI (host:container)
+      - "7688:7687"  # Bolt protocol (host:container)
     environment:
       - NEO4J_AUTH=neo4j/hs2_graph_2024
       - NEO4J_PLUGINS=["apoc", "graph-data-science"]
@@ -307,7 +307,7 @@ services:
     image: maptiler/tileserver-gl:latest
     container_name: infrastructure-tileserver
     ports:
-      - "8080:8080"
+      - "8081:8080"  # (host:container)
     volumes:
       - ./data/tiles:/data:ro
     environment:

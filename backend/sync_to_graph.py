@@ -89,7 +89,7 @@ async def run_full_sync():
             print(f"   • Blockers:      {stats['blockers']}")
 
             print(f"\n💡 Next Steps:")
-            print(f"   1. Open Neo4j Browser: http://localhost:7474")
+            print(f"   1. Open Neo4j Browser: http://localhost:7475")
             print(f"   2. Login: neo4j / hs2_graph_2024")
             print(f"   3. Run query: MATCH (a:Asset) RETURN a LIMIT 25")
             print(f"   4. Visualize relationships!")

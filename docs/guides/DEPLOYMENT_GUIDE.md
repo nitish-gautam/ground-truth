@@ -111,9 +111,9 @@ docker compose exec postgres psql -U gpr_user -d gpr_db -c "
 | **API Docs** | http://localhost:8002/docs | Swagger UI |
 | **API Redoc** | http://localhost:8002/redoc | Alternative docs |
 | **Frontend** | http://localhost:3003 | React UI (if implemented) |
-| **MinIO Console** | http://localhost:9001 | S3-compatible storage |
+| **MinIO Console** | http://localhost:9011 | S3-compatible storage |
 | **PostgreSQL** | localhost:5433 | Database (external access) |
-| **Redis** | localhost:6379 | Cache (external access) |
+| **Redis** | localhost:6380| Cache (external access) |
 
 ### Environment Variables
 

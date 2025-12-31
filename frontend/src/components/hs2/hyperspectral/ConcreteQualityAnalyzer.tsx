@@ -351,9 +351,16 @@ export function ConcreteQualityAnalyzer() {
           {result.defects && result.defects.num_defects > 0 && (
             <Card elevation={2}>
               <CardContent>
-                <Typography variant="h6" gutterBottom fontWeight={600}>
-                  Defect Detection
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                  <Typography variant="h6" fontWeight={600}>
+                    Defect Detection
+                  </Typography>
+                  <Chip
+                    label="🔴 MOCK DATA (Phase 2)"
+                    size="small"
+                    sx={{ bgcolor: 'rgb(254, 242, 242)', color: 'rgb(153, 27, 27)', fontWeight: 600 }}
+                  />
+                </Box>
                 <Divider sx={{ mb: 2 }} />
 
                 <Alert severity="warning" sx={{ mb: 2 }}>

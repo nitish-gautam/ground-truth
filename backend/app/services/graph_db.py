@@ -48,7 +48,7 @@ class GraphDBService:
             user: Neo4j username (default: from env NEO4J_USER)
             password: Neo4j password (default: from env NEO4J_PASSWORD)
         """
-        self.uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        self.uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7688")
         self.user = user or os.getenv("NEO4J_USER", "neo4j")
         self.password = password or os.getenv("NEO4J_PASSWORD", "hs2_graph_2024")
 
