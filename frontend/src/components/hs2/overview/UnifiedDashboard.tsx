@@ -53,6 +53,7 @@ import {
 } from '@mui/icons-material';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import TooltipTerm from '../../common/TooltipTerm';
 
 interface UnifiedDashboardData {
   assets: {
@@ -151,9 +152,9 @@ export const UnifiedDashboard: React.FC = () => {
   const deliverablesApprovedPct = (data.deliverables.approved / data.deliverables.total) * 100;
 
   return (
-    <Box sx={{ maxWidth: '1600px', margin: '0 auto', p: 3 }}>
+    <Box sx={{ maxWidth: '1400px', margin: '0 auto', p: 4 }}>
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 6 }}>
         <Typography variant="h4" fontWeight={700} gutterBottom sx={{ color: 'primary.main' }}>
           HS2 Infrastructure Intelligence Platform
         </Typography>
@@ -161,35 +162,41 @@ export const UnifiedDashboard: React.FC = () => {
           Unified dashboard combining real-time project data with predictive analytics
         </Typography>
         <Box display="flex" gap={2} alignItems="center" sx={{ mt: 2 }}>
-          <Chip
-            label="SYNTHETIC DATA"
-            color="warning"
-            size="small"
-            sx={{ fontWeight: 600 }}
-          />
+          <TooltipTerm term="SYNTHETIC_DATA" showIcon={false}>
+            <Chip
+              label="SYNTHETIC DATA"
+              color="warning"
+              size="small"
+              sx={{ fontWeight: 600 }}
+            />
+          </TooltipTerm>
           <Typography variant="caption" color="text.secondary">
             {data.assets.total} assets, {data.deliverables.total} deliverables
           </Typography>
-          <Chip
-            label="REAL DATA"
-            color="success"
-            size="small"
-            sx={{ fontWeight: 600 }}
-          />
+          <TooltipTerm term="REAL_DATA" showIcon={false}>
+            <Chip
+              label="REAL DATA"
+              color="success"
+              size="small"
+              sx={{ fontWeight: 600 }}
+            />
+          </TooltipTerm>
           <Typography variant="caption" color="text.secondary">
-            {data.datasets.bim_models.count} BIM models, {data.datasets.gis_shapefiles.count}+ GIS layers, {(data.datasets.noise_monitoring.measurements / 1000000).toFixed(1)}M+ measurements
+            <TooltipTerm term="BIM" showIcon={false}>{data.datasets.bim_models.count} BIM models</TooltipTerm>, <TooltipTerm term="GIS" showIcon={false}>{data.datasets.gis_shapefiles.count}+ GIS layers</TooltipTerm>, {(data.datasets.noise_monitoring.measurements / 1000000).toFixed(1)}M+ measurements
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={complianceCheckMutation.isPending ? <CircularProgress size={20} color="inherit" /> : <PlayArrow />}
-            onClick={() => complianceCheckMutation.mutate()}
-            disabled={complianceCheckMutation.isPending}
-            size="large"
-          >
-            {complianceCheckMutation.isPending ? 'Running...' : 'TAEM Compliance Check'}
-          </Button>
+          <TooltipTerm term="TAEM" showIcon={false}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={complianceCheckMutation.isPending ? <CircularProgress size={20} color="inherit" /> : <PlayArrow />}
+              onClick={() => complianceCheckMutation.mutate()}
+              disabled={complianceCheckMutation.isPending}
+              size="large"
+            >
+              {complianceCheckMutation.isPending ? 'Running...' : 'TAEM Compliance Check'}
+            </Button>
+          </TooltipTerm>
         </Box>
       </Box>
 
@@ -325,7 +332,7 @@ export const UnifiedDashboard: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
         {/* ==================== ASSETS OVERVIEW ==================== */}
         <Grid item xs={12}>
           <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -346,7 +353,7 @@ export const UnifiedDashboard: React.FC = () => {
                 </Typography>
                 <Divider sx={{ my: 1 }} />
                 <Typography variant="caption" color="text.secondary">
-                  Avg TAEM: {data.assets.avg_taem_score}
+                  <TooltipTerm term="TAEM">Avg TAEM</TooltipTerm>: {data.assets.avg_taem_score}
                 </Typography>
               </Paper>
             </Grid>
@@ -397,7 +404,7 @@ export const UnifiedDashboard: React.FC = () => {
                   {data.assets.at_risk}
                 </Typography>
                 <Typography variant="body1" fontWeight={600} color="text.primary">
-                  At Risk
+                  <TooltipTerm term="AT_RISK">At Risk</TooltipTerm>
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   {((data.assets.at_risk / data.assets.total) * 100).toFixed(1)}% of total
@@ -407,11 +414,11 @@ export const UnifiedDashboard: React.FC = () => {
           </Grid>
 
           {/* Assets by Type */}
-          <Box sx={{ mt: 4 }}>
+          <Box sx={{ mt: 5 }}>
             <Typography variant="h6" gutterBottom fontWeight={600}>
               Distribution by Asset Type
             </Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {data.assets_by_type.map((item) => (
                 <Grid item xs={6} md={2} key={item.asset_type}>
                   <Paper elevation={1} sx={{ p: 2, textAlign: 'center', bgcolor: 'grey.50' }}>

@@ -19,9 +19,9 @@ const hs2Theme = createTheme({
       contrastText: '#FFFFFF',
     },
     error: {
-      main: '#FF0000',
-      light: '#ff3333',
-      dark: '#cc0000',
+      main: '#D32F2F', // Material Design red-600 (softer than pure red)
+      light: '#EF5350',
+      dark: '#C62828',
     },
     warning: {
       main: '#FF8500',
@@ -29,14 +29,14 @@ const hs2Theme = createTheme({
       dark: '#cc6a00',
     },
     info: {
-      main: '#BCC7D3',
-      light: '#cdd6df',
-      dark: '#96a3b0',
+      main: '#0288D1', // Material Design light-blue-600 (WCAG AA compliant)
+      light: '#4FC3F7',
+      dark: '#01579B',
     },
     success: {
-      main: '#009C4A',
-      light: '#02b857',
-      dark: '#007a3a',
+      main: '#00A896', // Distinct teal (different from secondary green)
+      light: '#26C6B8',
+      dark: '#007A6E',
     },
     background: {
       default: '#FFFFFF',

@@ -407,6 +407,9 @@ This project has access to specialized Claude Code agents for domain-specific ta
 
 # Frontend question
 "@frontend-react-expert How do I create a PWA for field survey data collection?"
+
+# UX strategy question
+"@ux-strategist Analyze the user journey for first-time GPR surveyors and identify friction points"
 ```
 
 ### Agent Management Commands

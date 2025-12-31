@@ -12,7 +12,7 @@ import {
   Typography,
   Paper
 } from '@mui/material';
-import { Dashboard, Map, ViewInAr, Timeline, Terrain, Colorize, Assessment } from '@mui/icons-material';
+import { Dashboard, Map, ViewInAr, Analytics } from '@mui/icons-material';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,7 +48,7 @@ function a11yProps(index: number) {
 }
 
 interface HS2TabbedLayoutProps {
-  children: [React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode]; // [Overview, GIS, BIM, LiDAR, Hyperspectral, Demo, Progress]
+  children: [React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode]; // [Overview, GIS, DataViewers, Analytics]
 }
 
 export const HS2TabbedLayout: React.FC<HS2TabbedLayoutProps> = ({ children }) => {
@@ -103,9 +103,7 @@ export const HS2TabbedLayout: React.FC<HS2TabbedLayoutProps> = ({ children }) =>
           <Tabs
             value={currentTab}
             onChange={handleTabChange}
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile
+            variant="fullWidth"
             aria-label="HS2 workspace navigation tabs"
             sx={{
               '& .MuiTab-root': {
@@ -127,44 +125,26 @@ export const HS2TabbedLayout: React.FC<HS2TabbedLayoutProps> = ({ children }) =>
             <Tab
               icon={<Dashboard />}
               iconPosition="start"
-              label="Overview & Assurance"
+              label="Dashboard"
               {...a11yProps(0)}
             />
             <Tab
               icon={<Map />}
               iconPosition="start"
-              label="GIS Route Map"
+              label="GIS Map"
               {...a11yProps(1)}
             />
             <Tab
               icon={<ViewInAr />}
               iconPosition="start"
-              label="BIM Model Viewer"
+              label="Data Viewers"
               {...a11yProps(2)}
             />
             <Tab
-              icon={<Terrain />}
+              icon={<Analytics />}
               iconPosition="start"
-              label="LiDAR Viewer"
+              label="Analytics & Reports"
               {...a11yProps(3)}
-            />
-            <Tab
-              icon={<Colorize />}
-              iconPosition="start"
-              label="Hyperspectral Viewer"
-              {...a11yProps(4)}
-            />
-            <Tab
-              icon={<Assessment />}
-              iconPosition="start"
-              label="Integrated Demo"
-              {...a11yProps(5)}
-            />
-            <Tab
-              icon={<Timeline />}
-              iconPosition="start"
-              label="Progress Verification"
-              {...a11yProps(6)}
             />
           </Tabs>
         </Container>
@@ -183,15 +163,6 @@ export const HS2TabbedLayout: React.FC<HS2TabbedLayoutProps> = ({ children }) =>
         </TabPanel>
         <TabPanel value={currentTab} index={3}>
           {children[3]}
-        </TabPanel>
-        <TabPanel value={currentTab} index={4}>
-          {children[4]}
-        </TabPanel>
-        <TabPanel value={currentTab} index={5}>
-          {children[5]}
-        </TabPanel>
-        <TabPanel value={currentTab} index={6}>
-          {children[6]}
         </TabPanel>
       </Container>
     </Box>

@@ -39,6 +39,8 @@ import {
 } from '@mui/icons-material';
 import HS2SummaryCards from '../../HS2SummaryCards';
 import UnifiedDashboard from './UnifiedDashboard';
+import WelcomeBanner from '../../common/WelcomeBanner';
+import QuickStartCard from '../../common/QuickStartCard';
 import { useQuery } from '@tanstack/react-query';
 import hs2Client from '../../../api/hs2Client';
 import axios from 'axios';
@@ -64,8 +66,18 @@ export const HS2OverviewTab: React.FC = () => {
     refetchInterval: 60000
   });
 
+  const handleStartTour = () => {
+    // TODO: Integrate with React Joyride or similar tour library
+    console.log('Starting tour...');
+    // For now, just scroll to top and show a message
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Box>
+      {/* Welcome Banner */}
+      <WelcomeBanner onStartTour={handleStartTour} />
+
       {/* Tabs Navigation */}
       <Paper elevation={2} sx={{ mb: 3 }}>
         <Tabs
@@ -95,6 +107,9 @@ export const HS2OverviewTab: React.FC = () => {
       ) : (
         // Original Overview Content
         <Box>
+          {/* Quick Start Card */}
+          <QuickStartCard />
+
           {/* Summary Cards */}
           <Box sx={{ mb: 4 }}>
             <HS2SummaryCards summary={summary} isLoading={isLoading} />

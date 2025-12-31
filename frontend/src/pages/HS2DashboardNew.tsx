@@ -1,17 +1,15 @@
 /**
  * HS2 Dashboard - Tabbed Workspace
- * Professional 7-tab layout for Overview, GIS, BIM, LiDAR, Hyperspectral, Integrated Demo, and Progress Verification
+ * Streamlined 4-tab layout: Dashboard, GIS Map, Data Viewers, Analytics & Reports
+ * Reduced cognitive load from 7 tabs to 4 with smart grouping
  */
 
 import React from 'react';
 import { HS2TabbedLayout } from '../components/hs2/layout/HS2TabbedLayout';
 import { HS2OverviewTab } from '../components/hs2/overview/HS2OverviewTab';
 import { HS2GISTab } from '../components/hs2/gis/HS2GISTab';
-import { HS2BIMTab } from '../components/hs2/bim/HS2BIMTab';
-import { LidarViewerTab } from '../components/hs2/lidar/LidarViewerTab';
-import { HyperspectralViewerTab } from '../components/hs2/hyperspectral/HyperspectralViewerTab';
-import { SyntheticDataDashboard } from '../components/hs2/demo/RealDataDashboard';
-import { ProgressVerificationTab } from '../components/hs2/progress/ProgressVerificationTab';
+import { DataViewersTab } from '../components/hs2/viewers/DataViewersTab';
+import { AnalyticsTab } from '../components/hs2/analytics/AnalyticsTab';
 
 const HS2DashboardNew: React.FC = () => {
   return (
@@ -19,11 +17,8 @@ const HS2DashboardNew: React.FC = () => {
       {[
         <HS2OverviewTab key="overview" />,
         <HS2GISTab key="gis" />,
-        <HS2BIMTab key="bim" />,
-        <LidarViewerTab key="lidar" />,
-        <HyperspectralViewerTab key="hyperspectral" />,
-        <SyntheticDataDashboard key="demo" />,
-        <ProgressVerificationTab key="progress" />
+        <DataViewersTab key="viewers" />,
+        <AnalyticsTab key="analytics" />
       ]}
     </HS2TabbedLayout>
   );
